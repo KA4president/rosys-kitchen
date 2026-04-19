@@ -7,305 +7,129 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --green: #1B5E35;
-    --green-mid: #2D7A4A;
-    --green-light: #E8F5EC;
-    --green-border: #C5DFC9;
-    --cream: #F7F3EC;
-    --cream-dark: #EDE7DC;
-    --gold: #C89A2E;
-    --text: #1A2E1C;
-    --muted: #5A7A5E;
-    --white: #FFFFFF;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Lato', sans-serif; background: var(--cream); color: var(--text); }
-
-  /* NAV */
-  nav {
-    background: var(--green);
-    padding: 0 2.5rem;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 64px;
-    position: sticky; top: 0; z-index: 100;
-  }
-  .nav-logo {
-    display: flex; align-items: center; gap: 10px;
-  }
-  .nav-logo-text { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--cream); font-style: italic; }
-  .nav-links { display: flex; gap: 28px; }
-  .nav-links a {
-    color: rgba(247,243,236,0.8); font-size: 13px; font-weight: 700;
-    letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none;
-  }
-  .nav-links a:hover { color: var(--cream); }
-
-  /* HERO */
-  .hero {
-    background: var(--green);
-    padding: 4rem 2rem 3.5rem;
-    text-align: center;
-    position: relative; overflow: hidden;
-  }
-  .hero-pattern {
-    position: absolute; inset: 0;
-    background-image:
-      repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 14px),
-      repeating-linear-gradient(-45deg, rgba(255,255,255,0.015) 0, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 14px);
-  }
-  .hero-inner { position: relative; max-width: 640px; margin: 0 auto; }
-  .hero-badge {
-    display: inline-block;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-    color: rgba(247,243,236,0.7); margin-bottom: 16px;
-  }
-
-  /* SVG Logo mark embedded */
-  .hero-logomark { margin-bottom: 20px; }
-
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 56px; line-height: 1.05; color: var(--cream); margin-bottom: 6px;
-  }
-  .hero h1 span { font-style: italic; }
-  .hero-sub {
-    font-size: 15px; color: rgba(247,243,236,0.75); font-weight: 300;
-    line-height: 1.7; margin-bottom: 12px;
-  }
-  .hero-slogan {
-    font-family: 'Playfair Display', serif; font-style: italic;
-    font-size: 18px; color: rgba(200,154,46,0.95); margin-bottom: 28px;
-  }
-  .hero-pills { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-  .hero-pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 24px; padding: 7px 18px;
-    font-size: 13px; color: rgba(247,243,236,0.9);
-  }
-  .pill-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
-
-  /* SECTIONS */
-  section { padding: 3rem 2rem; }
-  .section-inner { max-width: 1000px; margin: 0 auto; }
-  .section-head { margin-bottom: 1.5rem; }
-  .section-title {
-    font-family: 'Playfair Display', serif; font-size: 30px;
-    font-weight: 700; color: var(--green); margin-bottom: 8px;
-  }
-  .section-rule { width: 44px; height: 3px; background: var(--gold); border-radius: 2px; }
-
-  /* PRICING BANNER */
-  .pricing-banner {
-    background: var(--green); color: var(--cream);
-    border-radius: 12px; padding: 14px 20px;
-    display: flex; align-items: center; gap: 12px;
-    font-size: 14px; margin-bottom: 20px; flex-wrap: wrap;
-  }
-  .pricing-banner strong { color: var(--gold); }
-  .pricing-sep { color: rgba(247,243,236,0.3); }
-
-  /* FILTER BUTTONS */
-  .filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-  .filter-btn {
-    padding: 7px 18px; border-radius: 24px; font-size: 13px; font-weight: 700;
-    cursor: pointer; border: 1.5px solid var(--green); background: transparent;
-    color: var(--green); font-family: 'Lato', sans-serif; transition: all 0.15s;
-  }
-  .filter-btn.active, .filter-btn:hover { background: var(--green); color: var(--cream); }
-
-  /* MENU GRID */
-  .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-  .menu-card {
-    background: var(--white); border: 1px solid var(--green-border);
-    border-radius: 14px; overflow: hidden; transition: border-color 0.15s;
-  }
-  .menu-card:hover { border-color: var(--green-mid); }
-  .card-img-placeholder {
-    height: 110px; background: var(--green-light);
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 6px;
-  }
-  .card-img-placeholder svg { width: 44px; height: 44px; opacity: 0.5; }
-  .card-img-placeholder span { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
-  .card-body { padding: 14px 16px; }
-  .occasional-tag {
-    display: inline-block; background: #FEF9E7; color: #8B6A00;
-    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
-    text-transform: uppercase; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px;
-    border: 1px solid #F0DC82;
-  }
-  .card-name {
-    font-family: 'Playfair Display', serif; font-size: 16px;
-    font-weight: 700; color: var(--green); margin-bottom: 4px;
-  }
-  .card-desc { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 12px; }
-  .card-footer { display: flex; align-items: center; justify-content: space-between; }
-  .card-price { font-size: 17px; font-weight: 700; color: var(--green); }
-  .card-price small { font-size: 11px; font-weight: 400; color: var(--muted); display: block; }
-  .add-btn {
-    background: var(--green); color: var(--cream); border: none;
-    border-radius: 8px; padding: 7px 16px; font-size: 13px; font-weight: 700;
-    cursor: pointer; font-family: 'Lato', sans-serif; transition: background 0.15s;
-  }
-  .add-btn:hover { background: var(--green-mid); }
-
-  /* CART BAR */
-  .cart-bar {
-    background: var(--green); padding: 14px 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; bottom: 0; z-index: 99; display: none;
-  }
-  .cart-info { color: var(--cream); font-size: 14px; }
-  .cart-info strong { color: var(--gold); }
-  .cart-order-btn {
-    background: var(--gold); color: var(--green); border: none;
-    border-radius: 8px; padding: 10px 24px; font-size: 14px; font-weight: 700;
-    cursor: pointer; font-family: 'Lato', sans-serif;
-  }
-
-  /* ORDER SECTION */
-  #order { background: var(--cream-dark); }
-  .order-form-wrap {
-    background: var(--white); border: 1px solid var(--green-border);
-    border-radius: 14px; padding: 1.75rem; max-width: 700px;
-  }
-  .order-summary { margin-bottom: 18px; }
-  .order-summary-label {
-    font-size: 12px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
-  }
-  .order-item {
-    display: flex; justify-content: space-between; padding: 7px 0;
-    border-bottom: 1px solid var(--green-light); font-size: 14px;
-  }
-  .order-item-name { color: var(--text); }
-  .order-item-price { color: var(--green); font-weight: 700; }
-  .order-total {
-    display: flex; justify-content: space-between; font-weight: 700;
-    font-size: 16px; color: var(--green); padding-top: 10px;
-  }
-  .form-divider { height: 1px; background: var(--green-light); margin: 18px 0; }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-  .form-group { display: flex; flex-direction: column; gap: 5px; }
-  .form-group.full { grid-column: 1 / -1; }
-  .form-label {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--muted);
-  }
-  .form-input {
-    padding: 11px 13px; border: 1px solid var(--green-border);
-    border-radius: 8px; font-size: 14px; font-family: 'Lato', sans-serif;
-    color: var(--text); background: var(--cream);
-  }
-  .form-input:focus { outline: none; border-color: var(--green); background: var(--white); }
-  .submit-btn {
-    width: 100%; background: var(--green); color: var(--cream);
-    border: none; border-radius: 10px; padding: 15px;
-    font-size: 15px; font-weight: 700; cursor: pointer;
-    font-family: 'Lato', sans-serif; margin-top: 8px;
-    transition: background 0.15s;
-  }
-  .submit-btn:hover { background: var(--green-mid); }
-  .success-box {
-    background: var(--green-light); border: 1px solid var(--green-border);
-    border-radius: 14px; padding: 2.5rem; text-align: center; display: none;
-  }
-  .success-icon {
-    width: 56px; height: 56px; background: var(--green); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 16px; color: var(--cream); font-size: 24px;
-  }
-  .success-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--green); margin-bottom: 8px; }
-  .success-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
-
-  /* CONTACT */
-  #contact { background: var(--cream); }
-  .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-  .contact-card {
-    background: var(--white); border: 1px solid var(--green-border);
-    border-radius: 14px; padding: 22px 18px; text-align: center;
-  }
-  .contact-icon { font-size: 26px; margin-bottom: 10px; }
-  .contact-label {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
-  }
-  .contact-value { font-size: 15px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
-  .contact-sub { font-size: 12px; color: var(--muted); }
-  .contact-link {
-    display: inline-block; margin-top: 8px; font-size: 13px; font-weight: 700;
-    color: var(--green-mid); text-decoration: none;
-  }
-  .contact-link:hover { text-decoration: underline; }
-  .map-wrap { border-radius: 14px; overflow: hidden; border: 1px solid var(--green-border); }
-  .map-bar {
-    background: var(--green); color: var(--cream);
-    font-size: 13px; padding: 11px 18px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .map-dot { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
-
-  /* GITHUB GUIDE */
-  #deploy { background: var(--green-light); }
-  .deploy-steps { display: flex; flex-direction: column; gap: 20px; max-width: 700px; }
-  .deploy-step {
-    background: var(--white); border: 1px solid var(--green-border);
-    border-radius: 14px; padding: 20px 22px; display: flex; gap: 16px;
-  }
-  .step-num {
-    width: 36px; height: 36px; border-radius: 50%; background: var(--green);
-    color: var(--cream); font-size: 15px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
-  .step-body {}
-  .step-title { font-size: 15px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
-  .step-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
-  .step-code {
-    display: block; background: #1E1E1E; color: #D4D4D4;
-    font-family: 'Courier New', monospace; font-size: 13px;
-    padding: 10px 14px; border-radius: 8px; margin-top: 10px;
-  }
-  .step-note {
-    display: inline-block; background: #FEF9E7; color: #8B6A00;
-    font-size: 12px; border-radius: 6px; padding: 6px 12px; margin-top: 8px;
-  }
-
-  /* FOOTER */
-  footer {
-    background: var(--green); padding: 2.5rem 2rem 2rem;
-    text-align: center;
-  }
-  .footer-logomark { margin-bottom: 10px; }
-  .footer-name {
-    font-family: 'Playfair Display', serif; font-size: 26px;
-    color: var(--cream); font-style: italic; margin-bottom: 4px;
-  }
-  .footer-slogan {
-    font-family: 'Playfair Display', serif; font-style: italic;
-    font-size: 15px; color: rgba(200,154,46,0.85); margin-bottom: 16px;
-  }
-  .footer-contacts { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 12px; }
-  .footer-contacts a { color: rgba(247,243,236,0.7); font-size: 13px; text-decoration: none; }
-  .footer-contacts a:hover { color: var(--cream); }
-  .footer-copy { font-size: 12px; color: rgba(247,243,236,0.4); }
+:root {
+  --green:#1B5E35;--green-mid:#2D7A4A;--green-light:#E8F5EC;
+  --green-border:#C5DFC9;--cream:#F7F3EC;--cream-dark:#EDE7DC;
+  --gold:#C89A2E;--text:#1A2E1C;--muted:#5A7A5E;--white:#FFFFFF;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Lato',sans-serif;background:var(--cream);color:var(--text);}
+nav{background:var(--green);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;}
+.nav-logo{font-family:'Playfair Display',serif;font-size:22px;color:var(--cream);font-style:italic;}
+.nav-links{display:flex;gap:28px;}
+.nav-links a{color:rgba(247,243,236,0.8);font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;cursor:pointer;}
+.nav-links a:hover{color:var(--cream);}
+.hero{background:var(--green);padding:3.5rem 2rem 3rem;text-align:center;position:relative;overflow:hidden;}
+.hero-pattern{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0,rgba(255,255,255,.025) 1px,transparent 1px,transparent 14px);}
+.hero-inner{position:relative;max-width:640px;margin:0 auto;}
+.hero h1{font-family:'Playfair Display',serif;font-size:52px;color:var(--cream);line-height:1.05;margin-bottom:8px;}
+.hero h1 span{font-style:italic;}
+.hero-sub{font-size:15px;color:rgba(247,243,236,.75);font-weight:300;line-height:1.7;margin-bottom:10px;}
+.hero-slogan{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:rgba(200,154,46,.95);margin-bottom:24px;}
+.hero-pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:24px;padding:7px 18px;font-size:13px;color:rgba(247,243,236,.9);}
+.pill-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;}
+section{padding:2.5rem 2rem;}
+.section-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--green);margin-bottom:8px;}
+.section-rule{width:44px;height:3px;background:var(--gold);border-radius:2px;margin-bottom:1.5rem;}
+.pricing-banner{background:var(--green);color:var(--cream);border-radius:12px;padding:13px 18px;font-size:13px;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.pricing-banner strong{color:var(--gold);}
+.pricing-sep{color:rgba(247,243,236,.3);}
+.filters{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.filter-btn{padding:7px 18px;border-radius:24px;font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid var(--green);background:transparent;color:var(--green);font-family:'Lato',sans-serif;transition:all .15s;}
+.filter-btn.active,.filter-btn:hover{background:var(--green);color:var(--cream);}
+.page-layout{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.menu-card{background:var(--white);border:1px solid var(--green-border);border-radius:12px;overflow:hidden;transition:border-color .15s;}
+.menu-card:hover{border-color:var(--green-mid);}
+.card-img-placeholder{height:100px;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;}
+.card-img-placeholder svg{width:38px;height:38px;opacity:.45;}
+.card-img-placeholder span{font-size:10px;color:var(--muted);}
+.card-body{padding:12px 14px;}
+.occasional-tag{display:inline-block;background:#FEF9E7;color:#8B6A00;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-bottom:5px;border:1px solid #F0DC82;}
+.card-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--green);margin-bottom:3px;}
+.card-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px;}
+.card-footer{display:flex;align-items:center;justify-content:space-between;}
+.card-price{font-size:16px;font-weight:700;color:var(--green);}
+.card-price small{font-size:11px;font-weight:400;color:var(--muted);display:block;}
+.qty-ctrl{display:flex;align-items:center;gap:8px;}
+.qty-btn{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--green);background:transparent;color:var(--green);font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Lato',sans-serif;line-height:1;}
+.qty-btn:hover{background:var(--green);color:var(--cream);}
+.qty-num{font-size:15px;font-weight:700;color:var(--green);min-width:18px;text-align:center;}
+.add-btn{background:var(--green);color:var(--cream);border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;}
+.add-btn:hover{background:var(--green-mid);}
+.cart-panel{background:var(--white);border:1px solid var(--green-border);border-radius:12px;overflow:hidden;position:sticky;top:74px;}
+.cart-header{background:var(--green);color:var(--cream);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;}
+.cart-header-title{font-family:'Playfair Display',serif;font-size:17px;}
+.cart-badge{background:var(--gold);color:var(--green);border-radius:12px;padding:2px 10px;font-size:12px;font-weight:700;}
+.cart-empty{padding:2rem;text-align:center;color:var(--muted);font-size:13px;line-height:1.6;}
+.cart-items{padding:0 16px;max-height:340px;overflow-y:auto;}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--green-light);gap:8px;}
+.cart-item-info{flex:1;}
+.cart-item-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.cart-item-unit{font-size:11px;color:var(--muted);}
+.cart-item-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.cart-item-price{font-size:14px;font-weight:700;color:var(--green);min-width:64px;text-align:right;}
+.cart-remove{background:none;border:none;color:#CC3333;font-size:18px;cursor:pointer;padding:0 2px;line-height:1;}
+.cart-footer{padding:14px 16px;border-top:2px solid var(--green-light);}
+.cart-subtotal{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px;}
+.cart-total-row{display:flex;justify-content:space-between;font-size:19px;font-weight:700;color:var(--green);margin-bottom:14px;padding-top:8px;border-top:1px solid var(--green-border);}
+.checkout-btn{width:100%;background:var(--green);color:var(--cream);border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;transition:background .15s;}
+.checkout-btn:hover{background:var(--green-mid);}
+#order{background:var(--cream-dark);}
+.order-form-wrap{background:var(--white);border:1px solid var(--green-border);border-radius:12px;padding:1.75rem;max-width:680px;}
+.order-summary-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.order-item-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--green-light);font-size:14px;}
+.order-total-row{display:flex;justify-content:space-between;font-weight:700;font-size:17px;color:var(--green);padding-top:10px;margin-bottom:16px;}
+.form-divider{height:1px;background:var(--green-light);margin:16px 0;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.form-input{padding:11px 13px;border:1px solid var(--green-border);border-radius:8px;font-size:14px;font-family:'Lato',sans-serif;color:var(--text);background:var(--cream);}
+.form-input:focus{outline:none;border-color:var(--green);background:var(--white);}
+.submit-btn{width:100%;background:var(--green);color:var(--cream);border:none;border-radius:10px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;margin-top:8px;}
+.submit-btn:hover{background:var(--green-mid);}
+.success-box{background:var(--green-light);border:1px solid var(--green-border);border-radius:12px;padding:2.5rem;text-align:center;display:none;max-width:680px;}
+.success-icon{width:56px;height:56px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--cream);font-size:24px;}
+.success-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--green);margin-bottom:8px;}
+.success-text{font-size:14px;color:var(--muted);line-height:1.7;}
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:22px;}
+.contact-card{background:var(--white);border:1px solid var(--green-border);border-radius:12px;padding:20px 16px;text-align:center;}
+.contact-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.contact-value{font-size:14px;font-weight:700;color:var(--green);}
+.contact-link{color:var(--green-mid);text-decoration:none;font-size:13px;font-weight:700;margin-top:8px;display:inline-block;}
+.map-wrap{border-radius:12px;overflow:hidden;border:1px solid var(--green-border);}
+.map-bar{background:var(--green);color:var(--cream);font-size:13px;padding:11px 18px;display:flex;align-items:center;gap:8px;}
+.map-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;flex-shrink:0;}
+.deploy-steps{display:flex;flex-direction:column;gap:18px;max-width:700px;}
+.deploy-step{background:var(--white);border:1px solid var(--green-border);border-radius:12px;padding:18px 20px;display:flex;gap:14px;}
+.step-num{width:36px;height:36px;border-radius:50%;background:var(--green);color:var(--cream);font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-title{font-size:15px;font-weight:700;color:var(--green);margin-bottom:5px;}
+.step-desc{font-size:13px;color:var(--muted);line-height:1.65;}
+.step-code{display:block;background:#1E1E1E;color:#D4D4D4;font-family:'Courier New',monospace;font-size:13px;padding:10px 14px;border-radius:8px;margin-top:10px;word-break:break-all;}
+.step-note{display:inline-block;background:#FEF9E7;color:#8B6A00;font-size:12px;border-radius:6px;padding:6px 12px;margin-top:8px;}
+footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
+.footer-name{font-family:'Playfair Display',serif;font-size:26px;color:var(--cream);font-style:italic;margin-bottom:4px;}
+.footer-slogan{font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:rgba(200,154,46,.85);margin-bottom:14px;}
+.footer-links{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:12px;}
+.footer-links a{color:rgba(247,243,236,.65);font-size:13px;text-decoration:none;}
+.footer-links a:hover{color:var(--cream);}
+.footer-copy{font-size:12px;color:rgba(247,243,236,.4);}
+@media(max-width:720px){
+  .page-layout{grid-template-columns:1fr;}
+  .cart-panel{position:static;}
+  .form-grid{grid-template-columns:1fr;}
+  .form-group.full{grid-column:1;}
+  .hero h1{font-size:38px;}
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
-  <div class="nav-logo">
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-      <circle cx="14" cy="14" r="13" stroke="#F7F3EC" stroke-width="1.5" opacity="0.4"/>
-      <path d="M14 6 C14 6 8 10 8 16 C8 20 11 22 14 22 C17 22 20 20 20 16 C20 10 14 6 14 6Z" fill="rgba(247,243,236,0.15)" stroke="#F7F3EC" stroke-width="1.2"/>
-      <line x1="14" y1="9" x2="14" y2="19" stroke="#C89A2E" stroke-width="1.5"/>
-      <line x1="10" y1="14" x2="18" y2="14" stroke="#C89A2E" stroke-width="1.5"/>
-    </svg>
-    <span class="nav-logo-text">Rosy's Kitchen</span>
-  </div>
+  <div class="nav-logo">Rosy's Kitchen</div>
   <div class="nav-links">
     <a href="#menu">Menu</a>
     <a href="#order">Order</a>
@@ -314,259 +138,127 @@
   </div>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
   <div class="hero-pattern"></div>
   <div class="hero-inner">
-    <div class="hero-badge">Homemade Ghanaian food</div>
-
-    <!-- Brand logomark inspired by paper bag design -->
-    <div class="hero-logomark">
-      <svg width="120" height="90" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Fork with rays -->
-        <line x1="60" y1="5" x2="60" y2="22" stroke="#C89A2E" stroke-width="2"/>
-        <line x1="56" y1="8" x2="52" y2="4" stroke="#C89A2E" stroke-width="1.5"/>
-        <line x1="64" y1="8" x2="68" y2="4" stroke="#C89A2E" stroke-width="1.5"/>
-        <line x1="60" y1="6" x2="60" y2="2" stroke="#C89A2E" stroke-width="1.5"/>
-        <!-- Bowl left -->
-        <ellipse cx="28" cy="42" rx="18" ry="10" stroke="rgba(247,243,236,0.6)" stroke-width="1.5" fill="rgba(247,243,236,0.08)"/>
-        <path d="M14 42 Q28 54 42 42" stroke="rgba(247,243,236,0.6)" stroke-width="1.5" fill="none"/>
-        <line x1="18" y1="46" x2="38" y2="46" stroke="rgba(247,243,236,0.3)" stroke-width="1"/>
-        <!-- Bowl right -->
-        <ellipse cx="92" cy="55" rx="18" ry="10" stroke="rgba(247,243,236,0.6)" stroke-width="1.5" fill="rgba(247,243,236,0.08)"/>
-        <path d="M78 55 Q92 67 106 55" stroke="rgba(247,243,236,0.6)" stroke-width="1.5" fill="none"/>
-        <!-- Hibiscus left -->
-        <circle cx="20" cy="65" r="5" stroke="rgba(247,243,236,0.5)" stroke-width="1.2" fill="none"/>
-        <path d="M20 60 Q22 58 24 60 Q26 64 24 68 Q22 70 20 70 Q18 70 16 68 Q14 64 16 60 Q18 58 20 60Z" stroke="rgba(247,243,236,0.4)" stroke-width="1" fill="none"/>
-        <!-- Hibiscus right -->
-        <circle cx="100" cy="30" r="5" stroke="rgba(247,243,236,0.5)" stroke-width="1.2" fill="none"/>
-        <path d="M100 25 Q102 23 104 25 Q106 29 104 33 Q102 35 100 35 Q98 35 96 33 Q94 29 96 25 Q98 23 100 25Z" stroke="rgba(247,243,236,0.4)" stroke-width="1" fill="none"/>
-        <!-- Leaves -->
-        <path d="M48 30 Q52 24 58 28" stroke="rgba(247,243,236,0.5)" stroke-width="1.2" fill="none"/>
-        <path d="M72 30 Q68 24 62 28" stroke="rgba(247,243,236,0.5)" stroke-width="1.2" fill="none"/>
-        <path d="M42 50 Q46 44 50 48" stroke="rgba(247,243,236,0.4)" stroke-width="1" fill="none"/>
-        <path d="M78 50 Q74 44 70 48" stroke="rgba(247,243,236,0.4)" stroke-width="1" fill="none"/>
-      </svg>
-    </div>
-
     <h1>ROSY'S<br><span>kitchen</span></h1>
     <div class="hero-sub">Jollof &bull; Fried rice &bull; Ampesi &bull; Banku<br>Grilled &amp; fried chicken &bull; Kontomire &bull; Garden eggs</div>
-    <div class="hero-slogan">— With love, Madam Rose</div>
+    <div class="hero-slogan">&mdash; With love, Madam Rose</div>
     <div class="hero-pills">
-      <span class="hero-pill"><span class="pill-dot"></span> Sapolo Street, North Kaneshie</span>
-      <span class="hero-pill"><span class="pill-dot"></span> 0548 598 047 / 0544 606 995</span>
+      <span class="hero-pill"><span class="pill-dot"></span>Sapolo Street, North Kaneshie, Accra</span>
+      <span class="hero-pill"><span class="pill-dot"></span>0548 598 047</span>
     </div>
   </div>
 </div>
 
-<!-- MENU -->
 <section id="menu">
-  <div class="section-inner">
-    <div class="section-head">
-      <div class="section-title">Our menu</div>
-      <div class="section-rule"></div>
-    </div>
-
-    <div class="pricing-banner">
-      <span>All meals: <strong>GH&#8373; 55</strong></span>
-      <span class="pricing-sep">|</span>
-      <span>Extra protein: <strong>+GH&#8373; 15</strong></span>
-      <span class="pricing-sep">|</span>
-      <span>Ampesi: choose <strong>yam</strong>, <strong>plantain</strong>, or <strong>both</strong></span>
-    </div>
-
-    <div class="filters">
-      <button class="filter-btn active" onclick="filterMenu('all',this)">All dishes</button>
-      <button class="filter-btn" onclick="filterMenu('rice',this)">Rice dishes</button>
-      <button class="filter-btn" onclick="filterMenu('ampesi',this)">Ampesi</button>
-      <button class="filter-btn" onclick="filterMenu('banku',this)">Banku</button>
-      <button class="filter-btn" onclick="filterMenu('protein',this)">Extra protein</button>
-    </div>
-
+  <div class="section-title">Our menu</div>
+  <div class="section-rule"></div>
+  <div class="pricing-banner">
+    <span>All meals: <strong>GH&#8373; 55</strong></span>
+    <span class="pricing-sep">|</span>
+    <span>Extra protein: <strong>+GH&#8373; 15</strong></span>
+    <span class="pricing-sep">|</span>
+    <span>Ampesi: choose <strong>yam</strong>, <strong>plantain</strong>, or <strong>both</strong></span>
+  </div>
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterMenu('all',this)">All dishes</button>
+    <button class="filter-btn" onclick="filterMenu('rice',this)">Rice dishes</button>
+    <button class="filter-btn" onclick="filterMenu('ampesi',this)">Ampesi</button>
+    <button class="filter-btn" onclick="filterMenu('banku',this)">Banku</button>
+    <button class="filter-btn" onclick="filterMenu('protein',this)">Extra protein</button>
+  </div>
+  <div class="page-layout">
     <div class="menu-grid" id="menuGrid"></div>
+    <div class="cart-panel">
+      <div class="cart-header">
+        <span class="cart-header-title">Your order</span>
+        <span class="cart-badge" id="cartBadge">0 items</span>
+      </div>
+      <div id="cartEmpty" class="cart-empty">No items yet.<br>Add meals from the menu.</div>
+      <div class="cart-items" id="cartItems" style="display:none"></div>
+      <div class="cart-footer" id="cartFooter" style="display:none">
+        <div class="cart-subtotal"><span>Subtotal</span><span>GH&#8373; <span id="cartSubtotal">0</span></span></div>
+        <div class="cart-total-row"><span>Total</span><span>GH&#8373; <span id="cartTotal">0</span></span></div>
+        <button class="checkout-btn" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'})">Proceed to order &rarr;</button>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- STICKY CART BAR -->
-<div class="cart-bar" id="cartBar">
-  <div class="cart-info">
-    <strong id="cartCount">0</strong> items &nbsp;&bull;&nbsp; Total: <strong>GH&#8373; <span id="cartTotal">0</span></strong>
-  </div>
-  <button class="cart-order-btn" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'})">Place order &rarr;</button>
-</div>
-
-<!-- ORDER -->
 <section id="order">
-  <div class="section-inner">
-    <div class="section-head">
-      <div class="section-title">Place your order</div>
-      <div class="section-rule"></div>
+  <div class="section-title">Complete your order</div>
+  <div class="section-rule"></div>
+  <div class="order-form-wrap" id="orderFormWrap">
+    <div id="orderSummaryBlock" style="display:none">
+      <div class="order-summary-label">Order summary</div>
+      <div id="orderItemsList"></div>
+      <div class="order-total-row"><span>Total</span><span>GH&#8373; <span id="formTotal">0</span></span></div>
+      <div class="form-divider"></div>
     </div>
-
-    <div class="order-form-wrap" id="orderFormWrap">
-      <div class="order-summary" id="orderSummary" style="display:none">
-        <div class="order-summary-label">Your order</div>
-        <div id="orderItemsList"></div>
-        <div class="order-total"><span>Total</span><span>GH&#8373; <span id="formTotal">0</span></span></div>
-        <div class="form-divider"></div>
-      </div>
-
-      <div class="form-grid">
-        <div class="form-group">
-          <label class="form-label">Full name</label>
-          <input class="form-input" id="fname" type="text" placeholder="Your name">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Phone number</label>
-          <input class="form-input" id="fphone" type="tel" placeholder="0XX XXX XXXX">
-        </div>
-        <div class="form-group full">
-          <label class="form-label">Delivery address</label>
-          <input class="form-input" id="faddress" type="text" placeholder="Street, area, nearest landmark...">
-        </div>
-        <div class="form-group full">
-          <label class="form-label">Special instructions (optional)</label>
-          <input class="form-input" id="fnotes" type="text" placeholder="e.g. yam only, extra pepper, no onions...">
-        </div>
-      </div>
-      <button class="submit-btn" onclick="submitOrder()">Send order via WhatsApp</button>
+    <div class="form-grid">
+      <div class="form-group"><label class="form-label">Full name</label><input class="form-input" id="fname" type="text" placeholder="Your name"></div>
+      <div class="form-group"><label class="form-label">Phone number</label><input class="form-input" id="fphone" type="tel" placeholder="0XX XXX XXXX"></div>
+      <div class="form-group full"><label class="form-label">Delivery address</label><input class="form-input" id="faddress" type="text" placeholder="Street, area, nearest landmark..."></div>
+      <div class="form-group full"><label class="form-label">Special instructions (optional)</label><input class="form-input" id="fnotes" type="text" placeholder="e.g. yam only, extra pepper, no onions..."></div>
     </div>
-
-    <div class="success-box" id="successBox">
-      <div class="success-icon">&#10003;</div>
-      <div class="success-title">Order sent to Rosy's Kitchen!</div>
-      <div class="success-text">Your order has been sent to Madam Rose via WhatsApp.<br>She will confirm and prepare your meal shortly. Thank you!</div>
-    </div>
+    <button class="submit-btn" onclick="submitOrder()">Send order via WhatsApp</button>
+  </div>
+  <div class="success-box" id="successBox">
+    <div class="success-icon">&#10003;</div>
+    <div class="success-title">Order sent to Rosy's Kitchen!</div>
+    <div class="success-text">Your order has been sent to Madam Rose via WhatsApp.<br>She will confirm and prepare your meal shortly. Thank you!</div>
   </div>
 </section>
 
-<!-- CONTACT -->
 <section id="contact">
-  <div class="section-inner">
-    <div class="section-head">
-      <div class="section-title">Find us</div>
-      <div class="section-rule"></div>
+  <div class="section-title">Find us</div>
+  <div class="section-rule"></div>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div style="font-size:26px;margin-bottom:10px">&#9742;</div>
+      <div class="contact-label">Call us</div>
+      <div class="contact-value">0548 598 047</div>
+      <div class="contact-value">0544 606 995</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:5px">Mon &ndash; Sat, 8am &ndash; 8pm</div>
     </div>
-    <div class="contact-grid">
-      <div class="contact-card">
-        <div class="contact-icon">&#9742;</div>
-        <div class="contact-label">Call us</div>
-        <div class="contact-value">0548 598 047</div>
-        <div class="contact-value">0544 606 995</div>
-        <div class="contact-sub" style="margin-top:6px;">Mon &ndash; Sat, 8am &ndash; 8pm</div>
-      </div>
-      <div class="contact-card">
-        <div class="contact-icon">&#128172;</div>
-        <div class="contact-label">WhatsApp orders</div>
-        <div class="contact-value">0548 598 047</div>
-        <a class="contact-link" href="https://wa.me/233548598047" target="_blank">Message Madam Rose &rarr;</a>
-      </div>
-      <div class="contact-card">
-        <div class="contact-icon">&#128205;</div>
-        <div class="contact-label">Our location</div>
-        <div class="contact-value" style="font-size:13px;line-height:1.6;">Sapolo Street<br>Opp. Pentecost, North Kaneshie<br>District Assembly, Accra</div>
-        <a class="contact-link" href="https://maps.app.goo.gl/MTjT43mF2JNs2J186" target="_blank">Open in Google Maps &rarr;</a>
-      </div>
+    <div class="contact-card">
+      <div style="font-size:26px;margin-bottom:10px">&#128172;</div>
+      <div class="contact-label">WhatsApp orders</div>
+      <div class="contact-value">0548 598 047</div>
+      <a class="contact-link" href="https://wa.me/233548598047" target="_blank">Message Madam Rose &rarr;</a>
     </div>
-    <div class="map-wrap">
-      <div class="map-bar">
-        <span class="map-dot"></span>
-        Rosy's Kitchen &mdash; Sapolo Street, opposite Pentecost, North Kaneshie, Accra
-      </div>
-      <iframe
-        src="https://maps.google.com/maps?q=Sapolo+Street+North+Kaneshie+Accra+Ghana&t=&z=16&ie=UTF8&iwloc=&output=embed"
-        width="100%" height="300" style="display:block;border:none;"
-        allowfullscreen="" loading="lazy" title="Rosy's Kitchen location map">
-      </iframe>
+    <div class="contact-card">
+      <div style="font-size:26px;margin-bottom:10px">&#128205;</div>
+      <div class="contact-label">Location</div>
+      <div class="contact-value" style="font-size:13px;line-height:1.6">Sapolo Street, opp. Pentecost<br>North Kaneshie District Assembly<br>Accra, Ghana</div>
+      <a class="contact-link" href="https://maps.app.goo.gl/MTjT43mF2JNs2J186" target="_blank">Open in Google Maps &rarr;</a>
     </div>
+  </div>
+  <div class="map-wrap">
+    <div class="map-bar"><span class="map-dot"></span>Rosy's Kitchen &mdash; Sapolo Street, opposite Pentecost, North Kaneshie, Accra</div>
+    <iframe src="https://maps.google.com/maps?q=Sapolo+Street+North+Kaneshie+Accra+Ghana&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="300" style="display:block;border:none" allowfullscreen loading="lazy" title="Rosy's Kitchen map"></iframe>
   </div>
 </section>
 
-<!-- GITHUB DEPLOY GUIDE -->
-<section id="deploy">
-  <div class="section-inner">
-    <div class="section-head">
-      <div class="section-title">How to launch this website for free</div>
-      <div class="section-rule"></div>
-    </div>
-    <p style="font-size:14px;color:var(--muted);margin-bottom:24px;max-width:600px;">Follow these steps to put Rosy's Kitchen live on the internet using GitHub Pages &mdash; completely free, no hosting fees ever.</p>
-
-    <div class="deploy-steps">
-      <div class="deploy-step">
-        <div class="step-num">1</div>
-        <div class="step-body">
-          <div class="step-title">Create a GitHub account</div>
-          <div class="step-desc">Go to <strong>github.com</strong> and sign up for a free account if you don't have one. If you already have one, just sign in. You only need the free plan.</div>
-        </div>
-      </div>
-
-      <div class="deploy-step">
-        <div class="step-num">2</div>
-        <div class="step-body">
-          <div class="step-title">Create a new repository</div>
-          <div class="step-desc">Once signed in, click the <strong>+</strong> icon at the top right &rarr; <strong>New repository</strong>. Name it exactly: <code style="background:#EEE;padding:2px 6px;border-radius:4px;font-size:13px;">rosys-kitchen</code> &mdash; tick "Add a README file" &mdash; click <strong>Create repository</strong>.</div>
-        </div>
-      </div>
-
-      <div class="deploy-step">
-        <div class="step-num">3</div>
-        <div class="step-body">
-          <div class="step-title">Upload the website file</div>
-          <div class="step-desc">Inside your new repository, click <strong>Add file &rarr; Upload files</strong>. Drag and drop the <strong>index.html</strong> file you downloaded. Scroll down and click <strong>Commit changes</strong>.</div>
-          <span class="step-note">Make sure the file is named exactly <strong>index.html</strong> — not index.html.txt or anything else.</span>
-        </div>
-      </div>
-
-      <div class="deploy-step">
-        <div class="step-num">4</div>
-        <div class="step-body">
-          <div class="step-title">Turn on GitHub Pages</div>
-          <div class="step-desc">In your repository, click <strong>Settings</strong> (top menu) &rarr; scroll down to <strong>Pages</strong> in the left sidebar. Under "Source", select <strong>Deploy from a branch</strong>. Set branch to <strong>main</strong> and folder to <strong>/ (root)</strong>. Click <strong>Save</strong>.</div>
-        </div>
-      </div>
-
-      <div class="deploy-step">
-        <div class="step-num">5</div>
-        <div class="step-body">
-          <div class="step-title">Your site is live!</div>
-          <div class="step-desc">Wait 2&ndash;3 minutes, then visit your website at:<br><br>
-          <code style="background:#1E1E1E;color:#D4D4D4;padding:8px 14px;border-radius:8px;font-size:13px;display:inline-block;">https://YOUR-GITHUB-USERNAME.github.io/rosys-kitchen</code><br><br>
-          Replace <strong>YOUR-GITHUB-USERNAME</strong> with your actual GitHub username. Share this link with customers!</div>
-          <span class="step-note">Example: if your username is kwame123, the link is https://kwame123.github.io/rosys-kitchen</span>
-        </div>
-      </div>
-
-      <div class="deploy-step">
-        <div class="step-num">6</div>
-        <div class="step-body">
-          <div class="step-title">How to update the site later (add photos, change prices)</div>
-          <div class="step-desc">When you have food photos or want to update prices: go to your repository on github.com &rarr; click <strong>index.html</strong> &rarr; click the <strong>pencil icon</strong> to edit &rarr; make your changes &rarr; click <strong>Commit changes</strong>. The live site updates automatically within 1&ndash;2 minutes.</div>
-        </div>
-      </div>
-
-      <div class="deploy-step">
-        <div class="step-num">7</div>
-        <div class="step-body">
-          <div class="step-title">Optional: get a custom domain (e.g. rosyskitchen.com)</div>
-          <div class="step-desc">Buy a domain from <strong>Namecheap</strong> or <strong>GoDaddy</strong> (~$10/year). In GitHub Pages settings, add your custom domain in the "Custom domain" field. Then in your domain registrar, add a CNAME record pointing to your GitHub Pages URL. Full instructions at: <strong>docs.github.com/pages/configuring-a-custom-domain</strong></div>
-        </div>
-      </div>
-    </div>
+<section id="deploy" style="background:var(--green-light)">
+  <div class="section-title">How to launch this website for free</div>
+  <div class="section-rule"></div>
+  <p style="font-size:14px;color:var(--muted);margin-bottom:22px;max-width:600px">Follow these steps to put Rosy's Kitchen live on the internet using GitHub Pages &mdash; completely free, no hosting fees.</p>
+  <div class="deploy-steps">
+    <div class="deploy-step"><div class="step-num">1</div><div><div class="step-title">Create a GitHub account</div><div class="step-desc">Go to <strong>github.com</strong> and sign up for a free account. You only need the free plan.</div></div></div>
+    <div class="deploy-step"><div class="step-num">2</div><div><div class="step-title">Create a new repository</div><div class="step-desc">Click <strong>+ &rarr; New repository</strong>. Name it <code style="background:#EEE;padding:1px 6px;border-radius:4px">rosys-kitchen</code>, tick <strong>Add a README file</strong>, click <strong>Create repository</strong>.</div></div></div>
+    <div class="deploy-step"><div class="step-num">3</div><div><div class="step-title">Upload the website file</div><div class="step-desc">Click <strong>Add file &rarr; Upload files</strong>. Drag and drop the <strong>index.html</strong> file. Click <strong>Commit changes</strong>.</div><span class="step-note">Make sure the file is named exactly <strong>index.html</strong></span></div></div>
+    <div class="deploy-step"><div class="step-num">4</div><div><div class="step-title">Turn on GitHub Pages</div><div class="step-desc">Go to <strong>Settings &rarr; Pages</strong>. Under Source select <strong>Deploy from a branch</strong>. Set branch to <strong>main</strong>, folder to <strong>/ (root)</strong>. Click <strong>Save</strong>.</div></div></div>
+    <div class="deploy-step"><div class="step-num">5</div><div><div class="step-title">Your site is live!</div><div class="step-desc">Wait 2&ndash;3 minutes then visit:<code class="step-code">https://YOUR-GITHUB-USERNAME.github.io/rosys-kitchen</code></div><span class="step-note">Replace YOUR-GITHUB-USERNAME with your actual GitHub username</span></div></div>
+    <div class="deploy-step"><div class="step-num">6</div><div><div class="step-title">Updating the site later</div><div class="step-desc">Go to your repository &rarr; click <strong>index.html</strong> &rarr; click the <strong>pencil icon</strong> to edit &rarr; make changes &rarr; click <strong>Commit changes</strong>. Updates go live in 1&ndash;2 minutes.</div></div></div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
-  <div class="footer-logomark">
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-      <circle cx="20" cy="20" r="18" stroke="rgba(247,243,236,0.3)" stroke-width="1.5"/>
-      <line x1="20" y1="8" x2="20" y2="32" stroke="rgba(200,154,46,0.6)" stroke-width="1.5"/>
-      <line x1="8" y1="20" x2="32" y2="20" stroke="rgba(200,154,46,0.6)" stroke-width="1.5"/>
-    </svg>
-  </div>
   <div class="footer-name">Rosy's Kitchen</div>
   <div class="footer-slogan">With love, Madam Rose</div>
-  <div class="footer-contacts">
+  <div class="footer-links">
     <a href="tel:0548598047">0548 598 047</a>
     <a href="tel:0544606995">0544 606 995</a>
     <a href="https://wa.me/233548598047" target="_blank">WhatsApp</a>
@@ -576,129 +268,109 @@
 </footer>
 
 <script>
-const WANUM = '233548598047';
-
-const menuItems = [
-  {id:1, name:"Jollof rice", desc:"Slow-cooked tomato jollof the Ghanaian way, smoky and perfectly spiced. Served with fried or grilled chicken.", price:55, cat:"rice", occasional:false},
-  {id:2, name:"Fried rice", desc:"Stir-fried rice with vegetables, served with fried or grilled chicken.", price:55, cat:"rice", occasional:false},
-  {id:3, name:"Rice, beans stew & fried plantain", desc:"A comforting full meal — rice with rich beans stew and sweet fried ripe plantain.", price:55, cat:"rice", occasional:true},
-  {id:4, name:"Ampesi — yam", desc:"Soft boiled yam served with garden eggs stew or kontomire stew and fried fish.", price:55, cat:"ampesi", occasional:false},
-  {id:5, name:"Ampesi — plantain", desc:"Boiled ripe plantain with garden eggs stew or kontomire stew and fried fish.", price:55, cat:"ampesi", occasional:false},
-  {id:6, name:"Ampesi — yam & plantain", desc:"The full combo — both yam and plantain together with stew and fried fish.", price:55, cat:"ampesi", occasional:false},
-  {id:7, name:"Banku with okro stew", desc:"Classic Ghanaian banku paired with smooth, rich okro stew and fish.", price:55, cat:"banku", occasional:true},
-  {id:8, name:"Extra fried chicken", desc:"An additional piece of crispy fried chicken added to any meal.", price:15, cat:"protein", occasional:false},
-  {id:9, name:"Extra grilled chicken", desc:"An additional piece of smoky marinated grilled chicken.", price:15, cat:"protein", occasional:false},
-  {id:10, name:"Extra fried fish", desc:"An extra piece of fresh fried fish added to any meal.", price:15, cat:"protein", occasional:false},
+const WANUM='233548598047';
+const menuItems=[
+  {id:1,name:"Jollof rice",desc:"Slow-cooked tomato jollof, smoky and perfectly spiced. Served with fried or grilled chicken.",price:55,cat:"rice",occasional:false},
+  {id:2,name:"Fried rice",desc:"Stir-fried rice with vegetables, served with fried or grilled chicken.",price:55,cat:"rice",occasional:false},
+  {id:3,name:"Rice, beans stew & fried plantain",desc:"Hearty rice with rich beans stew and sweet fried ripe plantain.",price:55,cat:"rice",occasional:true},
+  {id:4,name:"Ampesi — yam",desc:"Soft boiled yam with garden eggs stew or kontomire stew and fried fish.",price:55,cat:"ampesi",occasional:false},
+  {id:5,name:"Ampesi — plantain",desc:"Boiled ripe plantain with garden eggs stew or kontomire stew and fried fish.",price:55,cat:"ampesi",occasional:false},
+  {id:6,name:"Ampesi — yam & plantain",desc:"Both yam and plantain together with stew and fried fish.",price:55,cat:"ampesi",occasional:false},
+  {id:7,name:"Banku with okro stew",desc:"Classic Ghanaian banku with smooth okro stew and fish.",price:55,cat:"banku",occasional:true},
+  {id:8,name:"Extra fried chicken",desc:"An additional crispy fried chicken piece added to any meal.",price:15,cat:"protein",occasional:false},
+  {id:9,name:"Extra grilled chicken",desc:"An additional smoky grilled chicken piece added to any meal.",price:15,cat:"protein",occasional:false},
+  {id:10,name:"Extra fried fish",desc:"An extra fresh fried fish piece added to any meal.",price:15,cat:"protein",occasional:false},
 ];
-
-let cart = {};
-
-const bowlIcon = `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <ellipse cx="22" cy="22" rx="16" ry="9" stroke="#2D7A4A" stroke-width="1.5" fill="rgba(45,122,74,0.08)"/>
-  <path d="M8 22 Q22 34 36 22" stroke="#2D7A4A" stroke-width="1.5" fill="none"/>
-  <line x1="12" y1="26" x2="32" y2="26" stroke="#2D7A4A" stroke-width="1" opacity="0.4"/>
-  <line x1="14" y1="29" x2="30" y2="29" stroke="#2D7A4A" stroke-width="1" opacity="0.3"/>
-</svg>`;
-
-const chickenIcon = `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M10 30 Q12 18 22 15 Q32 12 36 22 Q38 30 30 34 Q20 38 10 30Z" stroke="#2D7A4A" stroke-width="1.5" fill="rgba(45,122,74,0.08)"/>
-  <circle cx="30" cy="18" r="4" stroke="#2D7A4A" stroke-width="1.2" fill="none"/>
-  <path d="M22 26 Q24 22 28 24" stroke="#2D7A4A" stroke-width="1.2" fill="none"/>
-</svg>`;
-
-const fishIcon = `<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M8 22 Q16 14 28 22 Q16 30 8 22Z" stroke="#2D7A4A" stroke-width="1.5" fill="rgba(45,122,74,0.08)"/>
-  <path d="M28 22 L36 16 L36 28 Z" stroke="#2D7A4A" stroke-width="1.2" fill="rgba(45,122,74,0.06)"/>
-  <circle cx="14" cy="20" r="2" fill="#2D7A4A" opacity="0.5"/>
-</svg>`;
-
-function getIcon(cat) {
-  if (cat === 'protein') return chickenIcon;
-  if (cat === 'banku') return bowlIcon;
-  return bowlIcon;
-}
-
-function renderMenu(filter) {
-  const grid = document.getElementById('menuGrid');
-  const items = filter === 'all' ? menuItems : menuItems.filter(m => m.cat === filter);
-  grid.innerHTML = items.map(item => `
-    <div class="menu-card">
-      <div class="card-img-placeholder">
-        ${getIcon(item.cat)}
-        <span>Photo coming soon</span>
-      </div>
+const bowlSVG=`<svg viewBox="0 0 44 44" fill="none"><ellipse cx="22" cy="22" rx="16" ry="9" stroke="#2D7A4A" stroke-width="1.5" fill="rgba(45,122,74,0.08)"/><path d="M8 22 Q22 34 36 22" stroke="#2D7A4A" stroke-width="1.5" fill="none"/><line x1="12" y1="26" x2="32" y2="26" stroke="#2D7A4A" stroke-width="1" opacity="0.4"/></svg>`;
+const chickenSVG=`<svg viewBox="0 0 44 44" fill="none"><path d="M10 30 Q12 18 22 15 Q32 12 36 22 Q38 30 30 34 Q20 38 10 30Z" stroke="#2D7A4A" stroke-width="1.5" fill="rgba(45,122,74,0.08)"/><circle cx="30" cy="18" r="4" stroke="#2D7A4A" stroke-width="1.2" fill="none"/></svg>`;
+let cart={};
+function getIcon(cat){return cat==='protein'?chickenSVG:bowlSVG;}
+function renderMenu(filter){
+  const grid=document.getElementById('menuGrid');
+  const items=filter==='all'?menuItems:menuItems.filter(m=>m.cat===filter);
+  grid.innerHTML=items.map(item=>{
+    const qty=cart[item.id]?cart[item.id].qty:0;
+    return `<div class="menu-card" id="card-${item.id}">
+      <div class="card-img-placeholder">${getIcon(item.cat)}<span>Photo coming soon</span></div>
       <div class="card-body">
-        ${item.occasional ? '<span class="occasional-tag">Occasional special</span>' : ''}
+        ${item.occasional?'<span class="occasional-tag">Occasional special</span>':''}
         <div class="card-name">${item.name}</div>
         <div class="card-desc">${item.desc}</div>
         <div class="card-footer">
-          <div class="card-price">
-            GH&#8373; ${item.price}
-            ${item.cat === 'protein' ? '<small>add-on to any meal</small>' : ''}
-          </div>
-          <button class="add-btn" onclick="addToCart(${item.id})">+ Add</button>
+          <div class="card-price">GH&#8373; ${item.price}${item.cat==='protein'?'<small>add-on to any meal</small>':''}</div>
+          ${qty===0
+            ?`<button class="add-btn" onclick="addToCart(${item.id})">+ Add</button>`
+            :`<div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(${item.id},-1)">&#8722;</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${item.id},1)">+</button></div>`}
         </div>
       </div>
+    </div>`;
+  }).join('');
+}
+function addToCart(id){const item=menuItems.find(m=>m.id===id);if(!cart[id])cart[id]={...item,qty:0};cart[id].qty=1;updateAll();}
+function changeQty(id,delta){if(!cart[id])return;cart[id].qty+=delta;if(cart[id].qty<=0)delete cart[id];updateAll();}
+function updateAll(){updateCartPanel();updateMenuCards();updateOrderSummary();}
+function updateMenuCards(){
+  menuItems.forEach(item=>{
+    const card=document.getElementById('card-'+item.id);
+    if(!card)return;
+    const footer=card.querySelector('.card-footer');
+    const qty=cart[item.id]?cart[item.id].qty:0;
+    const priceHTML=`<div class="card-price">GH&#8373; ${item.price}${item.cat==='protein'?'<small>add-on to any meal</small>':''}</div>`;
+    footer.innerHTML=priceHTML+(qty===0
+      ?`<button class="add-btn" onclick="addToCart(${item.id})">+ Add</button>`
+      :`<div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(${item.id},-1)">&#8722;</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${item.id},1)">+</button></div>`);
+  });
+}
+function updateCartPanel(){
+  const items=Object.values(cart).filter(i=>i.qty>0);
+  const count=items.reduce((s,i)=>s+i.qty,0);
+  const total=items.reduce((s,i)=>s+i.qty*i.price,0);
+  document.getElementById('cartBadge').textContent=count+(count===1?' item':' items');
+  document.getElementById('cartSubtotal').textContent=total;
+  document.getElementById('cartTotal').textContent=total;
+  const emptyEl=document.getElementById('cartEmpty');
+  const itemsEl=document.getElementById('cartItems');
+  const footerEl=document.getElementById('cartFooter');
+  if(items.length===0){emptyEl.style.display='block';itemsEl.style.display='none';footerEl.style.display='none';}
+  else{
+    emptyEl.style.display='none';itemsEl.style.display='block';footerEl.style.display='block';
+    itemsEl.innerHTML=items.map(i=>`<div class="cart-item">
+      <div class="cart-item-info"><div class="cart-item-name">${i.name}</div><div class="cart-item-unit">GH&#8373; ${i.price} each</div></div>
+      <div class="cart-item-right"><div class="cart-item-price">GH&#8373; ${i.qty*i.price}</div><button class="cart-remove" onclick="changeQty(${i.id},-${i.qty})" title="Remove">&#215;</button></div>
     </div>`).join('');
-}
-
-function filterMenu(cat, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderMenu(cat);
-}
-
-function addToCart(id) {
-  const item = menuItems.find(m => m.id === id);
-  if (!cart[id]) cart[id] = {...item, qty:0};
-  cart[id].qty++;
-  updateCart();
-}
-
-function updateCart() {
-  const items = Object.values(cart).filter(i => i.qty > 0);
-  const count = items.reduce((s,i) => s+i.qty, 0);
-  const total = items.reduce((s,i) => s+i.qty*i.price, 0);
-  document.getElementById('cartCount').textContent = count;
-  document.getElementById('cartTotal').textContent = total;
-  document.getElementById('formTotal').textContent = total;
-  document.getElementById('cartBar').style.display = count > 0 ? 'flex' : 'none';
-  const sumDiv = document.getElementById('orderSummary');
-  const listDiv = document.getElementById('orderItemsList');
-  if (count > 0) {
-    sumDiv.style.display = 'block';
-    listDiv.innerHTML = items.map(i => `
-      <div class="order-item">
-        <span class="order-item-name">${i.qty}x ${i.name}</span>
-        <span class="order-item-price">GH&#8373; ${i.qty*i.price}</span>
-      </div>`).join('');
-  } else {
-    sumDiv.style.display = 'none';
   }
 }
-
-function submitOrder() {
-  const name = document.getElementById('fname').value.trim();
-  const phone = document.getElementById('fphone').value.trim();
-  const address = document.getElementById('faddress').value.trim();
-  const notes = document.getElementById('fnotes').value.trim();
-  if (!name || !phone || !address) { alert('Please fill in your name, phone number and delivery address.'); return; }
-  const items = Object.values(cart).filter(i => i.qty > 0);
-  if (!items.length) { alert('Please add at least one item to your order.'); return; }
-  const total = items.reduce((s,i) => s+i.qty*i.price, 0);
-  let msg = `*New Order — Rosy's Kitchen*\n\n`;
-  msg += `*Customer:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}`;
-  if (notes) msg += `\n*Notes:* ${notes}`;
-  msg += `\n\n*Order details:*\n`;
-  items.forEach(i => { msg += `• ${i.qty}x ${i.name} — GH₵${i.qty*i.price}\n`; });
-  msg += `\n*Total: GH₵${total}*\n\n_Sent from rosyskitchen.com_`;
-  window.open(`https://wa.me/${WANUM}?text=${encodeURIComponent(msg)}`, '_blank');
-  document.getElementById('orderFormWrap').style.display = 'none';
-  document.getElementById('successBox').style.display = 'block';
-  cart = {};
-  updateCart();
+function updateOrderSummary(){
+  const items=Object.values(cart).filter(i=>i.qty>0);
+  const total=items.reduce((s,i)=>s+i.qty*i.price,0);
+  document.getElementById('formTotal').textContent=total;
+  const block=document.getElementById('orderSummaryBlock');
+  const listEl=document.getElementById('orderItemsList');
+  if(items.length>0){
+    block.style.display='block';
+    listEl.innerHTML=items.map(i=>`<div class="order-item-row"><span>${i.qty}x ${i.name}</span><span style="font-weight:700;color:var(--green)">GH&#8373; ${i.qty*i.price}</span></div>`).join('');
+  }else{block.style.display='none';}
 }
-
+function filterMenu(cat,btn){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMenu(cat);}
+function submitOrder(){
+  const name=document.getElementById('fname').value.trim();
+  const phone=document.getElementById('fphone').value.trim();
+  const address=document.getElementById('faddress').value.trim();
+  const notes=document.getElementById('fnotes').value.trim();
+  if(!name||!phone||!address){alert('Please fill in your name, phone and address.');return;}
+  const items=Object.values(cart).filter(i=>i.qty>0);
+  if(!items.length){alert('Please add at least one item to your order.');return;}
+  const total=items.reduce((s,i)=>s+i.qty*i.price,0);
+  let msg=`*New Order — Rosy's Kitchen*\n\n*Customer:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}`;
+  if(notes)msg+=`\n*Notes:* ${notes}`;
+  msg+=`\n\n*Order:*\n`;
+  items.forEach(i=>{msg+=`• ${i.qty}x ${i.name} — GH₵${i.qty*i.price}\n`;});
+  msg+=`\n*Total: GH₵${total}*\n\n_Sent from Rosy's Kitchen website_`;
+  window.open(`https://wa.me/${WANUM}?text=${encodeURIComponent(msg)}`,'_blank');
+  document.getElementById('orderFormWrap').style.display='none';
+  document.getElementById('successBox').style.display='block';
+  cart={};updateAll();
+}
 renderMenu('all');
 </script>
 </body>
