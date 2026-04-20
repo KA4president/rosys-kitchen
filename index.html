@@ -103,13 +103,6 @@ section{padding:2.5rem 2rem;}
 .map-wrap{border-radius:12px;overflow:hidden;border:1px solid var(--green-border);}
 .map-bar{background:var(--green);color:var(--cream);font-size:13px;padding:11px 18px;display:flex;align-items:center;gap:8px;}
 .map-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;flex-shrink:0;}
-.deploy-steps{display:flex;flex-direction:column;gap:18px;max-width:700px;}
-.deploy-step{background:var(--white);border:1px solid var(--green-border);border-radius:12px;padding:18px 20px;display:flex;gap:14px;}
-.step-num{width:36px;height:36px;border-radius:50%;background:var(--green);color:var(--cream);font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.step-title{font-size:15px;font-weight:700;color:var(--green);margin-bottom:5px;}
-.step-desc{font-size:13px;color:var(--muted);line-height:1.65;}
-.step-code{display:block;background:#1E1E1E;color:#D4D4D4;font-family:'Courier New',monospace;font-size:13px;padding:10px 14px;border-radius:8px;margin-top:10px;word-break:break-all;}
-.step-note{display:inline-block;background:#FEF9E7;color:#8B6A00;font-size:12px;border-radius:6px;padding:6px 12px;margin-top:8px;}
 footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
 .footer-name{font-family:'Playfair Display',serif;font-size:26px;color:var(--cream);font-style:italic;margin-bottom:4px;}
 .footer-slogan{font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:rgba(200,154,46,.85);margin-bottom:14px;}
@@ -134,7 +127,6 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
     <a href="#menu">Menu</a>
     <a href="#order">Order</a>
     <a href="#contact">Contact</a>
-    <a href="#deploy">Launch guide</a>
   </div>
 </nav>
 
@@ -241,19 +233,7 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
   </div>
 </section>
 
-<section id="deploy" style="background:var(--green-light)">
-  <div class="section-title">How to launch this website for free</div>
-  <div class="section-rule"></div>
-  <p style="font-size:14px;color:var(--muted);margin-bottom:22px;max-width:600px">Follow these steps to put Rosy's Kitchen live on the internet using GitHub Pages &mdash; completely free, no hosting fees.</p>
-  <div class="deploy-steps">
-    <div class="deploy-step"><div class="step-num">1</div><div><div class="step-title">Create a GitHub account</div><div class="step-desc">Go to <strong>github.com</strong> and sign up for a free account. You only need the free plan.</div></div></div>
-    <div class="deploy-step"><div class="step-num">2</div><div><div class="step-title">Create a new repository</div><div class="step-desc">Click <strong>+ &rarr; New repository</strong>. Name it <code style="background:#EEE;padding:1px 6px;border-radius:4px">rosys-kitchen</code>, tick <strong>Add a README file</strong>, click <strong>Create repository</strong>.</div></div></div>
-    <div class="deploy-step"><div class="step-num">3</div><div><div class="step-title">Upload the website file</div><div class="step-desc">Click <strong>Add file &rarr; Upload files</strong>. Drag and drop the <strong>index.html</strong> file. Click <strong>Commit changes</strong>.</div><span class="step-note">Make sure the file is named exactly <strong>index.html</strong></span></div></div>
-    <div class="deploy-step"><div class="step-num">4</div><div><div class="step-title">Turn on GitHub Pages</div><div class="step-desc">Go to <strong>Settings &rarr; Pages</strong>. Under Source select <strong>Deploy from a branch</strong>. Set branch to <strong>main</strong>, folder to <strong>/ (root)</strong>. Click <strong>Save</strong>.</div></div></div>
-    <div class="deploy-step"><div class="step-num">5</div><div><div class="step-title">Your site is live!</div><div class="step-desc">Wait 2&ndash;3 minutes then visit:<code class="step-code">https://YOUR-GITHUB-USERNAME.github.io/rosys-kitchen</code></div><span class="step-note">Replace YOUR-GITHUB-USERNAME with your actual GitHub username</span></div></div>
-    <div class="deploy-step"><div class="step-num">6</div><div><div class="step-title">Updating the site later</div><div class="step-desc">Go to your repository &rarr; click <strong>index.html</strong> &rarr; click the <strong>pencil icon</strong> to edit &rarr; make changes &rarr; click <strong>Commit changes</strong>. Updates go live in 1&ndash;2 minutes.</div></div></div>
-  </div>
-</section>
+
 
 <footer>
   <div class="footer-name">Rosy's Kitchen</div>
