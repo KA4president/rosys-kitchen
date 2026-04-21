@@ -98,8 +98,8 @@ section{padding:2.5rem 2rem;}
 .success-box{background:var(--green-light);border:1px solid var(--green-border);border-radius:12px;padding:2.5rem;text-align:center;display:none;max-width:680px;}
 .success-icon{width:56px;height:56px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--cream);font-size:24px;}
 .success-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--green);margin-bottom:8px;}
-.success-text{font-size:14px;color:var(--muted);line-height:1.7;}
 .success-order-id{display:inline-block;background:var(--green);color:var(--cream);border-radius:8px;padding:6px 16px;font-size:14px;font-weight:700;margin:12px 0;}
+.success-text{font-size:14px;color:var(--muted);line-height:1.7;}
 .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:22px;}
 .contact-card{background:var(--white);border:1px solid var(--green-border);border-radius:12px;padding:20px 16px;text-align:center;}
 .contact-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
@@ -193,35 +193,31 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
       <div class="order-total-row"><span>Total</span><span>GH&#8373; <span id="formTotal">0</span></span></div>
       <div class="form-divider"></div>
     </div>
-
     <div class="form-grid">
       <div class="form-group"><label class="form-label">Full name</label><input class="form-input" id="fname" type="text" placeholder="Your name"></div>
       <div class="form-group"><label class="form-label">Phone number</label><input class="form-input" id="fphone" type="tel" placeholder="0XX XXX XXXX"></div>
       <div class="form-group full"><label class="form-label">Delivery address</label><input class="form-input" id="faddress" type="text" placeholder="Street, area, nearest landmark..."></div>
       <div class="form-group full"><label class="form-label">Special instructions (optional)</label><input class="form-input" id="fnotes" type="text" placeholder="e.g. yam only, extra pepper, no onions..."></div>
     </div>
-
     <div class="order-summary-label" style="margin-bottom:10px">How would you like to send your order?</div>
     <div class="order-methods">
       <div class="method-btn selected" id="methodDirect" onclick="selectMethod('direct')">
-        📲 Direct Order<br><span style="font-size:11px;font-weight:400">Instantly to kitchen dashboard</span>
+        📲 Direct Order<br><span style="font-size:11px;font-weight:400">Instantly to kitchen</span>
       </div>
       <div class="method-btn" id="methodWhatsapp" onclick="selectMethod('whatsapp')">
-        💬 WhatsApp<br><span style="font-size:11px;font-weight:400">Message Madam Rose directly</span>
+        💬 WhatsApp<br><span style="font-size:11px;font-weight:400">Message Madam Rose</span>
       </div>
       <div class="method-btn" id="methodBoth" onclick="selectMethod('both')">
-        ✅ Both<br><span style="font-size:11px;font-weight:400">Dashboard + WhatsApp</span>
+        ✅ Both<br><span style="font-size:11px;font-weight:400">Kitchen + WhatsApp</span>
       </div>
     </div>
-
     <button class="submit-btn" id="submitBtn" onclick="submitOrder()">Place Order</button>
   </div>
-
   <div class="success-box" id="successBox">
     <div class="success-icon">&#10003;</div>
-    <div class="success-title">Order received!</div>
+    <div class="success-title">Your order has been sent to the kitchen!</div>
     <div id="successOrderId"></div>
-    <div class="success-text" id="successText">Your order has been sent to Rosy's Kitchen.<br>Madam Rose will prepare your meal shortly. Thank you!</div>
+    <div class="success-text" id="successText">Madam Rose will prepare your meal shortly. Thank you for ordering from Rosy's Kitchen! 🌿</div>
   </div>
 </section>
 
@@ -269,7 +265,6 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Supabase
 const { createClient } = supabase;
 const db = createClient(
   'https://wzbadqajvybsotlsnzec.supabase.co',
@@ -399,20 +394,16 @@ async function submitOrder(){
 
   let orderId = null;
 
-  // Save to Supabase if direct or both
   if(orderMethod === 'direct' || orderMethod === 'both') {
     try {
-      // Get order count for ID
       const { count } = await db.from('orders').select('*', { count: 'exact', head: true });
       orderId = `ORD-${String((count || 0) + 1).padStart(3, '0')}`;
-
       const orderItems = items.map(i => ({
         menuItemId: i.id,
         name: i.name,
         quantity: i.qty,
         price: i.price
       }));
-
       await db.from('orders').insert({
         id: orderId,
         customer_name: name,
@@ -431,7 +422,6 @@ async function submitOrder(){
     }
   }
 
-  // Send WhatsApp if whatsapp or both
   if(orderMethod === 'whatsapp' || orderMethod === 'both') {
     let msg = `*New Order — Rosy's Kitchen*\n\n*Customer:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}`;
     if(notes) msg += `\n*Notes:* ${notes}`;
@@ -443,7 +433,6 @@ async function submitOrder(){
     window.open(`https://wa.me/${WANUM}?text=${encodeURIComponent(msg)}`,'_blank');
   }
 
-  // Show success
   document.getElementById('orderFormWrap').style.display='none';
   const successBox = document.getElementById('successBox');
   successBox.style.display='block';
@@ -452,13 +441,7 @@ async function submitOrder(){
     document.getElementById('successOrderId').innerHTML = `<div class="success-order-id">Order ID: ${orderId}</div>`;
   }
 
-  const methodText = orderMethod === 'whatsapp'
-    ? 'Your order has been sent to Madam Rose via WhatsApp.'
-    : orderMethod === 'both'
-    ? 'Your order is in the kitchen dashboard and sent to Madam Rose on WhatsApp.'
-    : 'Your order is now in the kitchen dashboard. Madam Rose will start preparing shortly.';
-
-  document.getElementById('successText').innerHTML = `${methodText}<br><br>Thank you for ordering from Rosy's Kitchen! 🌿`;
+  document.getElementById('successText').innerHTML = `Madam Rose will prepare your meal shortly. You will be updated via WhatsApp as your order progresses.<br><br>Thank you for ordering from Rosy's Kitchen! 🌿`;
 
   cart={};updateAll();
   btn.disabled = false;
