@@ -48,7 +48,6 @@ section{padding:2.5rem 2rem;}
 .card-img-placeholder svg{width:38px;height:38px;opacity:.45;}
 .card-img-placeholder span{font-size:10px;color:var(--muted);}
 .card-body{padding:12px 14px;}
-.occasional-tag{display:inline-block;background:#FEF9E7;color:#8B6A00;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-bottom:5px;border:1px solid #F0DC82;}
 .card-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--green);margin-bottom:3px;}
 .card-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px;}
 .card-footer{display:flex;align-items:center;justify-content:space-between;}
@@ -60,6 +59,7 @@ section{padding:2.5rem 2rem;}
 .qty-num{font-size:15px;font-weight:700;color:var(--green);min-width:18px;text-align:center;}
 .add-btn{background:var(--green);color:var(--cream);border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;}
 .add-btn:hover{background:var(--green-mid);}
+.unavailable-tag{background:#f3f4f6;color:#9ca3af;border:none;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:700;font-family:'Lato',sans-serif;cursor:not-allowed;}
 .cart-panel{background:var(--white);border:1px solid var(--green-border);border-radius:12px;overflow:hidden;position:sticky;top:74px;}
 .cart-header{background:var(--green);color:var(--cream);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;}
 .cart-header-title{font-family:'Playfair Display',serif;font-size:17px;}
@@ -116,6 +116,7 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
 .footer-links a{color:rgba(247,243,236,.65);font-size:13px;text-decoration:none;}
 .footer-links a:hover{color:var(--cream);}
 .footer-copy{font-size:12px;color:rgba(247,243,236,.4);}
+.loading-menu{text-align:center;padding:3rem;color:var(--muted);font-size:14px;}
 @media(max-width:720px){
   .page-layout{grid-template-columns:1fr;}
   .cart-panel{position:static;}
@@ -160,15 +161,13 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
     <span class="pricing-sep">|</span>
     <span>Ampesi: choose <strong>yam</strong>, <strong>plantain</strong>, or <strong>both</strong></span>
   </div>
-  <div class="filters">
+  <div class="filters" id="filterButtons">
     <button class="filter-btn active" onclick="filterMenu('all',this)">All dishes</button>
-    <button class="filter-btn" onclick="filterMenu('rice',this)">Rice dishes</button>
-    <button class="filter-btn" onclick="filterMenu('ampesi',this)">Ampesi</button>
-    <button class="filter-btn" onclick="filterMenu('banku',this)">Banku</button>
-    <button class="filter-btn" onclick="filterMenu('protein',this)">Extra protein</button>
   </div>
   <div class="page-layout">
-    <div class="menu-grid" id="menuGrid"></div>
+    <div id="menuGrid" class="menu-grid">
+      <div class="loading-menu">Loading menu...</div>
+    </div>
     <div class="cart-panel">
       <div class="cart-header">
         <span class="cart-header-title">Your order</span>
@@ -282,24 +281,135 @@ const db = createClient(
 
 const WANUM = '233548598047';
 let orderMethod = 'direct';
-
-const menuItems = [
-  {id:1,name:"Jollof rice",desc:"Slow-cooked tomato jollof, smoky and perfectly spiced. Served with fried or grilled chicken.",price:55,cat:"rice",occasional:false},
-  {id:2,name:"Fried rice",desc:"Stir-fried rice with vegetables, served with fried or grilled chicken.",price:55,cat:"rice",occasional:false},
-  {id:3,name:"Rice, beans stew & fried plantain",desc:"Hearty rice with rich beans stew and sweet fried ripe plantain.",price:55,cat:"rice",occasional:true},
-  {id:4,name:"Ampesi — yam",desc:"Soft boiled yam with garden eggs stew or kontomire stew and fried fish.",price:55,cat:"ampesi",occasional:false},
-  {id:5,name:"Ampesi — plantain",desc:"Boiled ripe plantain with garden eggs stew or kontomire stew and fried fish.",price:55,cat:"ampesi",occasional:false},
-  {id:6,name:"Ampesi — yam & plantain",desc:"Both yam and plantain together with stew and fried fish.",price:55,cat:"ampesi",occasional:false},
-  {id:7,name:"Banku with okro stew",desc:"Classic Ghanaian banku with smooth okro stew and fish.",price:55,cat:"banku",occasional:true},
-  {id:8,name:"Extra fried chicken",desc:"An additional crispy fried chicken piece added to any meal.",price:15,cat:"protein",occasional:false},
-  {id:9,name:"Extra grilled chicken",desc:"An additional smoky grilled chicken piece added to any meal.",price:15,cat:"protein",occasional:false},
-  {id:10,name:"Extra fried fish",desc:"An extra fresh fried fish piece added to any meal.",price:15,cat:"protein",occasional:false},
-];
+let allMenuItems = [];
+let currentFilter = 'all';
+let cart = {};
 
 const bowlSVG=`<svg viewBox="0 0 44 44" fill="none"><ellipse cx="22" cy="22" rx="16" ry="9" stroke="#2D7A4A" stroke-width="1.5" fill="rgba(45,122,74,0.08)"/><path d="M8 22 Q22 34 36 22" stroke="#2D7A4A" stroke-width="1.5" fill="none"/><line x1="12" y1="26" x2="32" y2="26" stroke="#2D7A4A" stroke-width="1" opacity="0.4"/></svg>`;
 const chickenSVG=`<svg viewBox="0 0 44 44" fill="none"><path d="M10 30 Q12 18 22 15 Q32 12 36 22 Q38 30 30 34 Q20 38 10 30Z" stroke="#2D7A4A" stroke-width="1.5" fill="rgba(45,122,74,0.08)"/><circle cx="30" cy="18" r="4" stroke="#2D7A4A" stroke-width="1.2" fill="none"/></svg>`;
 
-let cart = {};
+function getIcon(cat) {
+  const protein = ['Extra Protein'];
+  return protein.includes(cat) ? chickenSVG : bowlSVG;
+}
+
+// Load menu from Supabase
+async function loadMenu() {
+  try {
+    const { data, error } = await db
+      .from('menu_items')
+      .select('*')
+      .order('category')
+      .order('name');
+    if (error) throw error;
+    allMenuItems = data || [];
+    buildFilters();
+    renderMenu(currentFilter);
+  } catch(err) {
+    console.error('Error loading menu:', err);
+    document.getElementById('menuGrid').innerHTML = '<div class="loading-menu">Unable to load menu. Please refresh.</div>';
+  }
+}
+
+function buildFilters() {
+  const categories = ['all', ...new Set(allMenuItems.map(m => m.category))];
+  const filterEl = document.getElementById('filterButtons');
+  filterEl.innerHTML = categories.map((cat, i) =>
+    `<button class="filter-btn ${i === 0 ? 'active' : ''}" onclick="filterMenu('${cat}', this)">
+      ${cat === 'all' ? 'All dishes' : cat}
+    </button>`
+  ).join('');
+}
+
+function filterMenu(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMenu(cat);
+}
+
+function renderMenu(filter) {
+  const grid = document.getElementById('menuGrid');
+  const items = filter === 'all'
+    ? allMenuItems
+    : allMenuItems.filter(m => m.category === filter);
+
+  if (items.length === 0) {
+    grid.innerHTML = '<div class="loading-menu">No items in this category.</div>';
+    return;
+  }
+
+  grid.innerHTML = items.map(item => {
+    const qty = cart[item.id] ? cart[item.id].qty : 0;
+    const isProtein = item.category === 'Extra Protein';
+    return `<div class="menu-card" id="card-${item.id}" style="${!item.available ? 'opacity:0.55' : ''}">
+      <div class="card-img-placeholder">${getIcon(item.category)}<span>Photo coming soon</span></div>
+      <div class="card-body">
+        ${!item.available ? '<span style="display:inline-block;background:#fee2e2;color:#dc2626;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-bottom:5px;">Unavailable today</span>' : ''}
+        <div class="card-name">${item.name}</div>
+        <div class="card-footer" style="margin-top:10px">
+          <div class="card-price">GH&#8373; ${item.price}${isProtein ? '<small>add-on to any meal</small>' : ''}</div>
+          ${!item.available
+            ? `<span class="unavailable-tag">Unavailable</span>`
+            : qty === 0
+              ? `<button class="add-btn" onclick="addToCart(${item.id})">+ Add</button>`
+              : `<div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(${item.id},-1)">&#8722;</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${item.id},1)">+</button></div>`
+          }
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addToCart(id) {
+  const item = allMenuItems.find(m => m.id === id);
+  if (!item || !item.available) return;
+  if (!cart[id]) cart[id] = { ...item, qty: 0 };
+  cart[id].qty = 1;
+  updateAll();
+}
+
+function changeQty(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) delete cart[id];
+  updateAll();
+}
+
+function updateAll() { updateCartPanel(); renderMenu(currentFilter); updateOrderSummary(); }
+
+function updateCartPanel() {
+  const items = Object.values(cart).filter(i => i.qty > 0);
+  const count = items.reduce((s, i) => s + i.qty, 0);
+  const total = items.reduce((s, i) => s + i.qty * i.price, 0);
+  document.getElementById('cartBadge').textContent = count + (count === 1 ? ' item' : ' items');
+  document.getElementById('cartSubtotal').textContent = total;
+  document.getElementById('cartTotal').textContent = total;
+  const emptyEl = document.getElementById('cartEmpty');
+  const itemsEl = document.getElementById('cartItems');
+  const footerEl = document.getElementById('cartFooter');
+  if (items.length === 0) {
+    emptyEl.style.display = 'block'; itemsEl.style.display = 'none'; footerEl.style.display = 'none';
+  } else {
+    emptyEl.style.display = 'none'; itemsEl.style.display = 'block'; footerEl.style.display = 'block';
+    itemsEl.innerHTML = items.map(i => `<div class="cart-item">
+      <div class="cart-item-info"><div class="cart-item-name">${i.name}</div><div class="cart-item-unit">GH&#8373; ${i.price} each</div></div>
+      <div class="cart-item-right"><div class="cart-item-price">GH&#8373; ${i.qty * i.price}</div><button class="cart-remove" onclick="changeQty(${i.id},-${i.qty})" title="Remove">&#215;</button></div>
+    </div>`).join('');
+  }
+}
+
+function updateOrderSummary() {
+  const items = Object.values(cart).filter(i => i.qty > 0);
+  const total = items.reduce((s, i) => s + i.qty * i.price, 0);
+  document.getElementById('formTotal').textContent = total;
+  const block = document.getElementById('orderSummaryBlock');
+  const listEl = document.getElementById('orderItemsList');
+  if (items.length > 0) {
+    block.style.display = 'block';
+    listEl.innerHTML = items.map(i => `<div class="order-item-row"><span>${i.qty}x ${i.name}</span><span style="font-weight:700;color:var(--green)">GH&#8373; ${i.qty * i.price}</span></div>`).join('');
+  } else { block.style.display = 'none'; }
+}
 
 function selectMethod(method) {
   orderMethod = method;
@@ -307,112 +417,28 @@ function selectMethod(method) {
   document.getElementById('method' + method.charAt(0).toUpperCase() + method.slice(1)).classList.add('selected');
 }
 
-function getIcon(cat){return cat==='protein'?chickenSVG:bowlSVG;}
-
-function renderMenu(filter){
-  const grid=document.getElementById('menuGrid');
-  const items=filter==='all'?menuItems:menuItems.filter(m=>m.cat===filter);
-  grid.innerHTML=items.map(item=>{
-    const qty=cart[item.id]?cart[item.id].qty:0;
-    return `<div class="menu-card" id="card-${item.id}">
-      <div class="card-img-placeholder">${getIcon(item.cat)}<span>Photo coming soon</span></div>
-      <div class="card-body">
-        ${item.occasional?'<span class="occasional-tag">Occasional special</span>':''}
-        <div class="card-name">${item.name}</div>
-        <div class="card-desc">${item.desc}</div>
-        <div class="card-footer">
-          <div class="card-price">GH&#8373; ${item.price}${item.cat==='protein'?'<small>add-on to any meal</small>':''}</div>
-          ${qty===0
-            ?`<button class="add-btn" onclick="addToCart(${item.id})">+ Add</button>`
-            :`<div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(${item.id},-1)">&#8722;</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${item.id},1)">+</button></div>`}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function addToCart(id){const item=menuItems.find(m=>m.id===id);if(!cart[id])cart[id]={...item,qty:0};cart[id].qty=1;updateAll();}
-function changeQty(id,delta){if(!cart[id])return;cart[id].qty+=delta;if(cart[id].qty<=0)delete cart[id];updateAll();}
-function updateAll(){updateCartPanel();updateMenuCards();updateOrderSummary();}
-
-function updateMenuCards(){
-  menuItems.forEach(item=>{
-    const card=document.getElementById('card-'+item.id);
-    if(!card)return;
-    const footer=card.querySelector('.card-footer');
-    const qty=cart[item.id]?cart[item.id].qty:0;
-    const priceHTML=`<div class="card-price">GH&#8373; ${item.price}${item.cat==='protein'?'<small>add-on to any meal</small>':''}</div>`;
-    footer.innerHTML=priceHTML+(qty===0
-      ?`<button class="add-btn" onclick="addToCart(${item.id})">+ Add</button>`
-      :`<div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(${item.id},-1)">&#8722;</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${item.id},1)">+</button></div>`);
-  });
-}
-
-function updateCartPanel(){
-  const items=Object.values(cart).filter(i=>i.qty>0);
-  const count=items.reduce((s,i)=>s+i.qty,0);
-  const total=items.reduce((s,i)=>s+i.qty*i.price,0);
-  document.getElementById('cartBadge').textContent=count+(count===1?' item':' items');
-  document.getElementById('cartSubtotal').textContent=total;
-  document.getElementById('cartTotal').textContent=total;
-  const emptyEl=document.getElementById('cartEmpty');
-  const itemsEl=document.getElementById('cartItems');
-  const footerEl=document.getElementById('cartFooter');
-  if(items.length===0){emptyEl.style.display='block';itemsEl.style.display='none';footerEl.style.display='none';}
-  else{
-    emptyEl.style.display='none';itemsEl.style.display='block';footerEl.style.display='block';
-    itemsEl.innerHTML=items.map(i=>`<div class="cart-item">
-      <div class="cart-item-info"><div class="cart-item-name">${i.name}</div><div class="cart-item-unit">GH&#8373; ${i.price} each</div></div>
-      <div class="cart-item-right"><div class="cart-item-price">GH&#8373; ${i.qty*i.price}</div><button class="cart-remove" onclick="changeQty(${i.id},-${i.qty})" title="Remove">&#215;</button></div>
-    </div>`).join('');
-  }
-}
-
-function updateOrderSummary(){
-  const items=Object.values(cart).filter(i=>i.qty>0);
-  const total=items.reduce((s,i)=>s+i.qty*i.price,0);
-  document.getElementById('formTotal').textContent=total;
-  const block=document.getElementById('orderSummaryBlock');
-  const listEl=document.getElementById('orderItemsList');
-  if(items.length>0){
-    block.style.display='block';
-    listEl.innerHTML=items.map(i=>`<div class="order-item-row"><span>${i.qty}x ${i.name}</span><span style="font-weight:700;color:var(--green)">GH&#8373; ${i.qty*i.price}</span></div>`).join('');
-  }else{block.style.display='none';}
-}
-
-function filterMenu(cat,btn){
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderMenu(cat);
-}
-
-async function submitOrder(){
+async function submitOrder() {
   const name = document.getElementById('fname').value.trim();
   const phone = document.getElementById('fphone').value.trim();
   const address = document.getElementById('faddress').value.trim();
   const notes = document.getElementById('fnotes').value.trim();
 
-  if(!name||!phone||!address){alert('Please fill in your name, phone and address.');return;}
-  const items = Object.values(cart).filter(i=>i.qty>0);
-  if(!items.length){alert('Please add at least one item to your order.');return;}
+  if (!name || !phone || !address) { alert('Please fill in your name, phone and address.'); return; }
+  const items = Object.values(cart).filter(i => i.qty > 0);
+  if (!items.length) { alert('Please add at least one item to your order.'); return; }
 
-  const total = items.reduce((s,i)=>s+i.qty*i.price,0);
+  const total = items.reduce((s, i) => s + i.qty * i.price, 0);
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.textContent = 'Placing order...';
 
   let orderId = null;
 
-  if(orderMethod === 'direct' || orderMethod === 'both') {
+  if (orderMethod === 'direct' || orderMethod === 'both') {
     try {
       const { count } = await db.from('orders').select('*', { count: 'exact', head: true });
       orderId = `ORD-${String((count || 0) + 1).padStart(3, '0')}`;
-      const orderItems = items.map(i => ({
-        menuItemId: i.id,
-        name: i.name,
-        quantity: i.qty,
-        price: i.price
-      }));
+      const orderItems = items.map(i => ({ menuItemId: i.id, name: i.name, quantity: i.qty, price: i.price }));
       await db.from('orders').insert({
         id: orderId,
         customer_name: name,
@@ -426,38 +452,34 @@ async function submitOrder(){
         created_by: 'website',
         staff_id: '',
       });
-    } catch(err) {
-      console.error('Supabase error:', err);
-    }
+    } catch (err) { console.error('Supabase error:', err); }
   }
 
-  if(orderMethod === 'whatsapp' || orderMethod === 'both') {
+  if (orderMethod === 'whatsapp' || orderMethod === 'both') {
     let msg = `*New Order — Rose Cookhouse*\n\n*Customer:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}`;
-    if(notes) msg += `\n*Notes:* ${notes}`;
+    if (notes) msg += `\n*Notes:* ${notes}`;
     msg += `\n\n*Order:*\n`;
-    items.forEach(i=>{msg+=`• ${i.qty}x ${i.name} — GH₵${i.qty*i.price}\n`;});
+    items.forEach(i => { msg += `• ${i.qty}x ${i.name} — GH₵${i.qty * i.price}\n`; });
     msg += `\n*Total: GH₵${total}*`;
-    if(orderId) msg += `\n*Order ID:* ${orderId}`;
+    if (orderId) msg += `\n*Order ID:* ${orderId}`;
     msg += `\n\n_Sent from Rose Cookhouse website_`;
-    window.open(`https://wa.me/${WANUM}?text=${encodeURIComponent(msg)}`,'_blank');
+    window.open(`https://wa.me/${WANUM}?text=${encodeURIComponent(msg)}`, '_blank');
   }
 
-  document.getElementById('orderFormWrap').style.display='none';
-  const successBox = document.getElementById('successBox');
-  successBox.style.display='block';
-
-  if(orderId) {
+  document.getElementById('orderFormWrap').style.display = 'none';
+  document.getElementById('successBox').style.display = 'block';
+  if (orderId) {
     document.getElementById('successOrderId').innerHTML = `<div class="success-order-id">Order ID: ${orderId}</div>`;
   }
-
   document.getElementById('successText').innerHTML = `Madam Rose will prepare your meal shortly. You will be updated via WhatsApp as your order progresses.<br><br>Thank you for ordering from Rose Cookhouse! 🌿`;
 
-  cart={};updateAll();
+  cart = {}; updateAll();
   btn.disabled = false;
   btn.textContent = 'Place Order';
 }
 
-renderMenu('all');
+// Load menu on page load
+loadMenu();
 </script>
 </body>
 </html>
