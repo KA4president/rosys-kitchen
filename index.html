@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rosy's Kitchen</title>
+<title>Rose Cookhouse</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
@@ -128,7 +128,7 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
 <body>
 
 <nav>
-  <div class="nav-logo">Rosy's Kitchen</div>
+  <div class="nav-logo">Rose Cookhouse</div>
   <div class="nav-links">
     <a href="#menu">Menu</a>
     <a href="#order">Order</a>
@@ -139,12 +139,13 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
 <div class="hero">
   <div class="hero-pattern"></div>
   <div class="hero-inner">
-    <h1>ROSY'S<br><span>kitchen</span></h1>
+    <h1>ROSE<br><span>Cookhouse</span></h1>
     <div class="hero-sub">Jollof &bull; Fried rice &bull; Ampesi &bull; Banku<br>Grilled &amp; fried chicken &bull; Kontomire &bull; Garden eggs</div>
     <div class="hero-slogan">&mdash; With love, Madam Rose</div>
     <div class="hero-pills">
       <span class="hero-pill"><span class="pill-dot"></span>Sapolo Street, North Kaneshie, Accra</span>
       <span class="hero-pill"><span class="pill-dot"></span>0548 598 047</span>
+      <span class="hero-pill"><span class="pill-dot"></span>@rosecookhouse</span>
     </div>
   </div>
 </div>
@@ -218,7 +219,7 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
     <div class="success-icon">&#10003;</div>
     <div class="success-title">Your order has been sent to the kitchen!</div>
     <div id="successOrderId"></div>
-    <div class="success-text" id="successText">Madam Rose will prepare your meal shortly. Thank you for ordering from Rosy's Kitchen! 🌿</div>
+    <div class="success-text" id="successText">Madam Rose will prepare your meal shortly. You will be updated via WhatsApp as your order progresses.<br><br>Thank you for ordering from Rose Cookhouse! 🌿</div>
   </div>
 </section>
 
@@ -240,6 +241,12 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
       <a class="contact-link" href="https://wa.me/233548598047" target="_blank">Message Madam Rose &rarr;</a>
     </div>
     <div class="contact-card">
+      <div style="font-size:26px;margin-bottom:10px">📸</div>
+      <div class="contact-label">Instagram</div>
+      <div class="contact-value">@rosecookhouse</div>
+      <a class="contact-link" href="https://instagram.com/rosecookhouse" target="_blank">Follow us &rarr;</a>
+    </div>
+    <div class="contact-card">
       <div style="font-size:26px;margin-bottom:10px">&#128205;</div>
       <div class="contact-label">Location</div>
       <div class="contact-value" style="font-size:13px;line-height:1.6">Sapolo Street, opp. Pentecost<br>North Kaneshie District Assembly<br>Accra, Ghana</div>
@@ -247,21 +254,22 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
     </div>
   </div>
   <div class="map-wrap">
-    <div class="map-bar"><span class="map-dot"></span>Rosy's Kitchen &mdash; Sapolo Street, opposite Pentecost, North Kaneshie, Accra</div>
-    <iframe src="https://maps.google.com/maps?q=Sapolo+Street+North+Kaneshie+Accra+Ghana&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="300" style="display:block;border:none" allowfullscreen loading="lazy" title="Rosy's Kitchen map"></iframe>
+    <div class="map-bar"><span class="map-dot"></span>Rose Cookhouse &mdash; Sapolo Street, opposite Pentecost, North Kaneshie, Accra</div>
+    <iframe src="https://maps.google.com/maps?q=Sapolo+Street+North+Kaneshie+Accra+Ghana&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="300" style="display:block;border:none" allowfullscreen loading="lazy" title="Rose Cookhouse map"></iframe>
   </div>
 </section>
 
 <footer>
-  <div class="footer-name">Rosy's Kitchen</div>
+  <div class="footer-name">Rose Cookhouse</div>
   <div class="footer-slogan">With love, Madam Rose</div>
   <div class="footer-links">
     <a href="tel:0548598047">0548 598 047</a>
     <a href="tel:0544606995">0544 606 995</a>
     <a href="https://wa.me/233548598047" target="_blank">WhatsApp</a>
+    <a href="https://instagram.com/rosecookhouse" target="_blank">Instagram</a>
     <a href="https://maps.app.goo.gl/MTjT43mF2JNs2J186" target="_blank">Find us</a>
   </div>
-  <div class="footer-copy">Sapolo Street, opposite Pentecost, North Kaneshie, Accra &bull; &copy; 2024 Rosy's Kitchen</div>
+  <div class="footer-copy">Sapolo Street, opposite Pentecost, North Kaneshie, Accra &bull; &copy; 2025 Rose Cookhouse</div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -424,13 +432,13 @@ async function submitOrder(){
   }
 
   if(orderMethod === 'whatsapp' || orderMethod === 'both') {
-    let msg = `*New Order — Rosy's Kitchen*\n\n*Customer:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}`;
+    let msg = `*New Order — Rose Cookhouse*\n\n*Customer:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}`;
     if(notes) msg += `\n*Notes:* ${notes}`;
     msg += `\n\n*Order:*\n`;
     items.forEach(i=>{msg+=`• ${i.qty}x ${i.name} — GH₵${i.qty*i.price}\n`;});
     msg += `\n*Total: GH₵${total}*`;
     if(orderId) msg += `\n*Order ID:* ${orderId}`;
-    msg += `\n\n_Sent from Rosy's Kitchen website_`;
+    msg += `\n\n_Sent from Rose Cookhouse website_`;
     window.open(`https://wa.me/${WANUM}?text=${encodeURIComponent(msg)}`,'_blank');
   }
 
@@ -442,7 +450,7 @@ async function submitOrder(){
     document.getElementById('successOrderId').innerHTML = `<div class="success-order-id">Order ID: ${orderId}</div>`;
   }
 
-  document.getElementById('successText').innerHTML = `Madam Rose will prepare your meal shortly. You will be updated via WhatsApp as your order progresses.<br><br>Thank you for ordering from Rosy's Kitchen! 🌿`;
+  document.getElementById('successText').innerHTML = `Madam Rose will prepare your meal shortly. You will be updated via WhatsApp as your order progresses.<br><br>Thank you for ordering from Rose Cookhouse! 🌿`;
 
   cart={};updateAll();
   btn.disabled = false;
