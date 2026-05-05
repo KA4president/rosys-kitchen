@@ -49,8 +49,8 @@ section{padding:2.5rem 2rem;}
 .card-img-placeholder span{font-size:10px;color:var(--muted);}
 .card-body{padding:12px 14px;}
 .card-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--green);margin-bottom:3px;}
-.card-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px;}
-.card-footer{display:flex;align-items:center;justify-content:space-between;}
+.card-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:8px;}
+.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
 .card-price{font-size:16px;font-weight:700;color:var(--green);}
 .card-price small{font-size:11px;font-weight:400;color:var(--muted);display:block;}
 .qty-ctrl{display:flex;align-items:center;gap:8px;}
@@ -65,12 +65,12 @@ section{padding:2.5rem 2rem;}
 .cart-header-title{font-family:'Playfair Display',serif;font-size:17px;}
 .cart-badge{background:var(--gold);color:var(--green);border-radius:12px;padding:2px 10px;font-size:12px;font-weight:700;}
 .cart-empty{padding:2rem;text-align:center;color:var(--muted);font-size:13px;line-height:1.6;}
-.cart-items{padding:0 16px;max-height:340px;overflow-y:auto;}
-.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--green-light);gap:8px;}
+.cart-items{padding:0 16px;max-height:380px;overflow-y:auto;}
+.cart-item{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--green-light);gap:8px;}
 .cart-item-info{flex:1;}
 .cart-item-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.cart-item-detail{font-size:11px;color:var(--green);font-style:italic;margin-bottom:2px;}
 .cart-item-unit{font-size:11px;color:var(--muted);}
-.cart-item-stew{font-size:11px;color:var(--green);font-style:italic;}
 .cart-item-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .cart-item-price{font-size:14px;font-weight:700;color:var(--green);min-width:64px;text-align:right;}
 .cart-remove{background:none;border:none;color:#CC3333;font-size:18px;cursor:pointer;padding:0 2px;line-height:1;}
@@ -119,15 +119,19 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
 .footer-copy{font-size:12px;color:rgba(247,243,236,.4);}
 .loading-menu{text-align:center;padding:3rem;color:var(--muted);font-size:14px;}
 
-/* Stew picker modal */
+/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;}
-.modal-box{background:var(--white);border-radius:16px;padding:2rem;max-width:360px;width:100%;text-align:center;}
+.modal-box{background:var(--white);border-radius:16px;padding:2rem;max-width:380px;width:100%;text-align:center;}
 .modal-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--green);margin-bottom:6px;}
-.modal-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem;}
-.stew-options{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem;}
-.stew-btn{padding:14px;border-radius:10px;border:2px solid var(--green-border);background:var(--cream);cursor:pointer;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;color:var(--green);transition:all .15s;}
-.stew-btn:hover{border-color:var(--green);background:var(--green-light);}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;}
+.modal-options{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem;}
+.modal-option-btn{padding:12px 16px;border-radius:10px;border:2px solid var(--green-border);background:var(--cream);cursor:pointer;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;color:var(--green);transition:all .15s;text-align:left;display:flex;align-items:center;gap:10px;}
+.modal-option-btn:hover{border-color:var(--green);background:var(--green-light);}
+.modal-option-btn.unavailable{opacity:0.4;cursor:not-allowed;border-color:var(--green-border);}
+.modal-option-btn.unavailable:hover{border-color:var(--green-border);background:var(--cream);}
+.modal-section-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;text-align:left;}
 .modal-cancel{font-size:13px;color:var(--muted);cursor:pointer;text-decoration:underline;}
+.modal-divider{height:1px;background:var(--green-light);margin:12px 0;}
 
 @media(max-width:720px){
   .page-layout{grid-template-columns:1fr;}
@@ -140,16 +144,13 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
 </head>
 <body>
 
-<!-- Stew Picker Modal -->
-<div class="modal-overlay" id="stewModal" style="display:none">
+<!-- Choice Modal -->
+<div class="modal-overlay" id="choiceModal" style="display:none">
   <div class="modal-box">
-    <div class="modal-title">Choose your stew</div>
-    <div class="modal-sub" id="stewModalSub">Which stew would you like with your Ampesi?</div>
-    <div class="stew-options">
-      <button class="stew-btn" onclick="confirmStew('Kontomire stew')">🌿 Kontomire stew</button>
-      <button class="stew-btn" onclick="confirmStew('Garden eggs stew')">🍆 Garden eggs stew</button>
-    </div>
-    <span class="modal-cancel" onclick="closeStewModal()">Cancel</span>
+    <div class="modal-title" id="modalTitle">Customise your meal</div>
+    <div class="modal-sub" id="modalSub"></div>
+    <div class="modal-options" id="modalOptions"></div>
+    <span class="modal-cancel" onclick="closeModal()">Cancel</span>
   </div>
 </div>
 
@@ -166,7 +167,7 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
   <div class="hero-pattern"></div>
   <div class="hero-inner">
     <h1>ROSE<br><span>Cookhouse</span></h1>
-    <div class="hero-sub">Jollof &bull; Fried rice &bull; Ampesi &bull; Banku<br>Grilled &amp; fried chicken &bull; Kontomire &bull; Garden eggs</div>
+    <div class="hero-sub">Jollof &bull; Fried rice &bull; Ampesi<br>Grilled &amp; fried chicken &bull; Kontomire &bull; Garden eggs</div>
     <div class="hero-slogan">&mdash; With love, Madam Rose</div>
     <div class="hero-pills">
       <span class="hero-pill"><span class="pill-dot"></span>Sapolo Street, North Kaneshie, Accra</span>
@@ -182,12 +183,10 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
   <div class="pricing-banner">
     <span>All meals: <strong>GH&#8373; 55</strong></span>
     <span class="pricing-sep">|</span>
-    <span>Extra protein: <strong>+GH&#8373; 15</strong></span>
-    <span class="pricing-sep">|</span>
-    <span>Ampesi: choose <strong>yam</strong>, <strong>plantain</strong>, or <strong>both</strong></span>
+    <span>Add-ons: <strong>Egg GH&#8373; 5 &bull; Extra protein GH&#8373; 15</strong></span>
   </div>
   <div class="filters" id="filterButtons">
-    <button class="filter-btn active" onclick="filterMenu('all',this)">All dishes</button>
+    <button class="filter-btn active" onclick="filterMenu('all',this)">All</button>
   </div>
   <div class="page-layout">
     <div id="menuGrid" class="menu-grid">
@@ -309,44 +308,41 @@ let orderMethod = 'direct';
 let allMenuItems = [];
 let currentFilter = 'all';
 let cart = {};
-let pendingAmpesiItem = null;
+let pendingItem = null;
+let cartKey = 0;
 
 const bowlSVG=`<svg viewBox="0 0 44 44" fill="none"><ellipse cx="22" cy="22" rx="16" ry="9" stroke="#2D7A4A" stroke-width="1.5" fill="rgba(45,122,74,0.08)"/><path d="M8 22 Q22 34 36 22" stroke="#2D7A4A" stroke-width="1.5" fill="none"/><line x1="12" y1="26" x2="32" y2="26" stroke="#2D7A4A" stroke-width="1" opacity="0.4"/></svg>`;
 const chickenSVG=`<svg viewBox="0 0 44 44" fill="none"><path d="M10 30 Q12 18 22 15 Q32 12 36 22 Q38 30 30 34 Q20 38 10 30Z" stroke="#2D7A4A" stroke-width="1.5" fill="rgba(45,122,74,0.08)"/><circle cx="30" cy="18" r="4" stroke="#2D7A4A" stroke-width="1.2" fill="none"/></svg>`;
-
-function isAmpesi(item) {
-  return item.category === 'Ampesi';
-}
+const drinkSVG=`<svg viewBox="0 0 44 44" fill="none"><rect x="14" y="10" width="16" height="24" rx="4" stroke="#2D7A4A" stroke-width="1.5" fill="rgba(45,122,74,0.08)"/><line x1="14" y1="18" x2="30" y2="18" stroke="#2D7A4A" stroke-width="1"/></svg>`;
 
 function getIcon(cat) {
-  return cat === 'Extra Protein' ? chickenSVG : bowlSVG;
+  if (cat === 'Drinks') return drinkSVG;
+  if (cat === 'Protein Options' || cat === 'Add-ons') return chickenSVG;
+  return bowlSVG;
 }
 
 async function loadMenu() {
   try {
-    const { data, error } = await db
-      .from('menu_items')
-      .select('*')
-      .order('category')
-      .order('name');
+    const { data, error } = await db.from('menu_items').select('*').order('id');
     if (error) throw error;
     allMenuItems = data || [];
     buildFilters();
     renderMenu(currentFilter);
   } catch(err) {
-    console.error('Error loading menu:', err);
     document.getElementById('menuGrid').innerHTML = '<div class="loading-menu">Unable to load menu. Please refresh.</div>';
   }
 }
 
 function buildFilters() {
-  const categories = ['all', ...new Set(allMenuItems.map(m => m.category))];
+  // Only show customer-facing categories in filters
+  const displayCats = ['Rice Dishes', 'Ampesi', 'Add-ons', 'Drinks'];
   const filterEl = document.getElementById('filterButtons');
-  filterEl.innerHTML = categories.map((cat, i) =>
-    `<button class="filter-btn ${i === 0 ? 'active' : ''}" onclick="filterMenu('${cat}', this)">
-      ${cat === 'all' ? 'All dishes' : cat}
-    </button>`
-  ).join('');
+  filterEl.innerHTML = [
+    `<button class="filter-btn active" onclick="filterMenu('all',this)">All</button>`,
+    ...displayCats.map(cat =>
+      `<button class="filter-btn" onclick="filterMenu('${cat}',this)">${cat}</button>`
+    )
+  ].join('');
 }
 
 function filterMenu(cat, btn) {
@@ -356,35 +352,58 @@ function filterMenu(cat, btn) {
   renderMenu(cat);
 }
 
+function getDisplayItems(filter) {
+  // Hide Protein Options from menu grid - they appear in the modal
+  const hidden = ['Protein Options'];
+  let items = allMenuItems.filter(m => !hidden.includes(m.category));
+  if (filter !== 'all') items = items.filter(m => m.category === filter);
+  return items;
+}
+
+function getCartDisplay(cartId) {
+  return cart[cartId];
+}
+
 function renderMenu(filter) {
   const grid = document.getElementById('menuGrid');
-  const items = filter === 'all' ? allMenuItems : allMenuItems.filter(m => m.category === filter);
+  const items = getDisplayItems(filter);
   if (items.length === 0) {
     grid.innerHTML = '<div class="loading-menu">No items in this category.</div>';
     return;
   }
   grid.innerHTML = items.map(item => {
-    const qty = cart[item.id] ? cart[item.id].qty : 0;
-    const isProtein = item.category === 'Extra Protein';
-    const ampesi = isAmpesi(item);
-    const stewNote = ampesi && cart[item.id] ? `<div class="cart-item-stew">${cart[item.id].stew}</div>` : '';
+    const inCart = Object.values(cart).find(c => c.itemId === item.id);
+    const isRice = item.category === 'Rice Dishes';
+    const isAmpesi = item.category === 'Ampesi';
+    const isAddon = item.category === 'Add-ons';
+    const isDrink = item.category === 'Drinks';
+
+    let descText = '';
+    if (isRice) descText = 'Choose your protein: grilled chicken, fried chicken or fried fish';
+    if (isAmpesi) descText = 'Served with fried fish · Choose your stew: kontomire or garden eggs';
+    if (isAddon && item.name === 'Egg') descText = 'Add a boiled egg to any meal';
+    if (isAddon && item.name.includes('Extra')) descText = 'Add extra protein to any meal';
+
     return `<div class="menu-card" id="card-${item.id}" style="${!item.available ? 'opacity:0.55' : ''}">
       <div class="card-img-placeholder">${getIcon(item.category)}<span>Photo coming soon</span></div>
       <div class="card-body">
         ${!item.available ? '<span style="display:inline-block;background:#fee2e2;color:#dc2626;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-bottom:5px;">Unavailable today</span>' : ''}
-        ${ampesi ? '<span style="display:inline-block;background:#E8F5EC;color:#1B5E35;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-bottom:5px;">Choose your stew</span>' : ''}
         <div class="card-name">${item.name}</div>
-        ${ampesi ? '<div style="font-size:11px;color:#5A7A5E;margin-bottom:8px;">Served with kontomire stew or garden eggs stew</div>' : ''}
-        <div class="card-footer" style="margin-top:8px">
-          <div class="card-price">GH&#8373; ${item.price}${isProtein ? '<small>add-on to any meal</small>' : ''}</div>
+        ${descText ? `<div class="card-desc">${descText}</div>` : ''}
+        <div class="card-footer">
+          <div class="card-price">GH&#8373; ${item.price}${isAddon ? '<small>add-on</small>' : ''}</div>
           ${!item.available
             ? `<span class="unavailable-tag">Unavailable</span>`
-            : qty === 0
-              ? `<button class="add-btn" onclick="addToCart(${item.id})">+ Add</button>`
-              : `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-                  <div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(${item.id},-1)">&#8722;</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${item.id},1)">+</button></div>
-                  ${ampesi && cart[item.id] ? `<span style="font-size:10px;color:var(--green);font-style:italic">${cart[item.id].stew}</span>` : ''}
+            : inCart
+              ? `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+                  <div class="qty-ctrl">
+                    <button class="qty-btn" onclick="changeQty('${inCart.cartId}',-1)">&#8722;</button>
+                    <span class="qty-num">${inCart.qty}</span>
+                    <button class="qty-btn" onclick="changeQty('${inCart.cartId}',1)">+</button>
+                  </div>
+                  ${inCart.detail ? `<span style="font-size:10px;color:var(--green);font-style:italic;text-align:right">${inCart.detail}</span>` : ''}
                 </div>`
+              : `<button class="add-btn" onclick="addToCart(${item.id})">+ Add</button>`
           }
         </div>
       </div>
@@ -395,35 +414,69 @@ function renderMenu(filter) {
 function addToCart(id) {
   const item = allMenuItems.find(m => m.id === id);
   if (!item || !item.available) return;
-  if (isAmpesi(item)) {
-    pendingAmpesiItem = item;
-    document.getElementById('stewModalSub').textContent = `Which stew would you like with your ${item.name}?`;
-    document.getElementById('stewModal').style.display = 'flex';
+
+  if (item.category === 'Rice Dishes') {
+    pendingItem = item;
+    const proteins = allMenuItems.filter(m => m.category === 'Protein Options');
+    document.getElementById('modalTitle').textContent = item.name;
+    document.getElementById('modalSub').textContent = 'Choose your protein. Your meal includes one protein at GH₵ 55.';
+    document.getElementById('modalOptions').innerHTML = `
+      <div class="modal-section-title">Choose protein</div>
+      ${proteins.map(p => `
+        <button class="modal-option-btn ${!p.available ? 'unavailable' : ''}"
+          onclick="${p.available ? `confirmChoice('protein','${p.name}')` : ''}">
+          🍗 ${p.name} ${!p.available ? '<span style="margin-left:auto;font-size:11px;color:#dc2626">Unavailable</span>' : ''}
+        </button>`).join('')}
+    `;
+    document.getElementById('choiceModal').style.display = 'flex';
+
+  } else if (item.category === 'Ampesi') {
+    pendingItem = item;
+    document.getElementById('modalTitle').textContent = item.name;
+    document.getElementById('modalSub').textContent = 'Your Ampesi comes with fried fish. Choose your stew below, and optionally add extra protein.';
+    const addons = allMenuItems.filter(m => m.category === 'Add-ons' || m.category === 'Protein Options');
+    document.getElementById('modalOptions').innerHTML = `
+      <div class="modal-section-title">Choose stew (required)</div>
+      <button class="modal-option-btn" onclick="confirmChoice('stew','Kontomire stew')">🌿 Kontomire stew</button>
+      <button class="modal-option-btn" onclick="confirmChoice('stew','Garden eggs stew')">🍆 Garden eggs stew</button>
+    `;
+    document.getElementById('choiceModal').style.display = 'flex';
+
   } else {
-    if (!cart[id]) cart[id] = { ...item, qty: 0 };
-    cart[id].qty = 1;
+    // Simple add — drinks, add-ons
+    const cId = `cart_${++cartKey}`;
+    cart[cId] = { cartId: cId, itemId: item.id, name: item.name, price: item.price, qty: 1, detail: '', category: item.category };
     updateAll();
   }
 }
 
-function confirmStew(stew) {
-  if (!pendingAmpesiItem) return;
-  const item = pendingAmpesiItem;
-  cart[item.id] = { ...item, qty: 1, stew };
-  pendingAmpesiItem = null;
-  closeStewModal();
-  updateAll();
+function confirmChoice(type, value) {
+  if (!pendingItem) return;
+  const item = pendingItem;
+  const cId = `cart_${++cartKey}`;
+
+  if (type === 'protein') {
+    cart[cId] = { cartId: cId, itemId: item.id, name: item.name, price: item.price, qty: 1, detail: value, category: item.category };
+    pendingItem = null;
+    closeModal();
+    updateAll();
+  } else if (type === 'stew') {
+    cart[cId] = { cartId: cId, itemId: item.id, name: item.name, price: item.price, qty: 1, detail: `Fried fish · ${value}`, category: item.category };
+    pendingItem = null;
+    closeModal();
+    updateAll();
+  }
 }
 
-function closeStewModal() {
-  document.getElementById('stewModal').style.display = 'none';
-  pendingAmpesiItem = null;
+function closeModal() {
+  document.getElementById('choiceModal').style.display = 'none';
+  pendingItem = null;
 }
 
-function changeQty(id, delta) {
-  if (!cart[id]) return;
-  cart[id].qty += delta;
-  if (cart[id].qty <= 0) delete cart[id];
+function changeQty(cartId, delta) {
+  if (!cart[cartId]) return;
+  cart[cartId].qty += delta;
+  if (cart[cartId].qty <= 0) delete cart[cartId];
   updateAll();
 }
 
@@ -446,12 +499,12 @@ function updateCartPanel() {
     itemsEl.innerHTML = items.map(i => `<div class="cart-item">
       <div class="cart-item-info">
         <div class="cart-item-name">${i.name}</div>
-        ${i.stew ? `<div class="cart-item-stew">🌿 ${i.stew}</div>` : ''}
+        ${i.detail ? `<div class="cart-item-detail">🌿 ${i.detail}</div>` : ''}
         <div class="cart-item-unit">GH&#8373; ${i.price} each</div>
       </div>
       <div class="cart-item-right">
         <div class="cart-item-price">GH&#8373; ${i.qty * i.price}</div>
-        <button class="cart-remove" onclick="changeQty(${i.id},-${i.qty})" title="Remove">&#215;</button>
+        <button class="cart-remove" onclick="changeQty('${i.cartId}',-${i.qty})" title="Remove">&#215;</button>
       </div>
     </div>`).join('');
   }
@@ -466,7 +519,7 @@ function updateOrderSummary() {
   if (items.length > 0) {
     block.style.display = 'block';
     listEl.innerHTML = items.map(i => `<div class="order-item-row">
-      <span>${i.qty}x ${i.name}${i.stew ? ` (${i.stew})` : ''}</span>
+      <span>${i.qty}x ${i.name}${i.detail ? ` · ${i.detail}` : ''}</span>
       <span style="font-weight:700;color:var(--green)">GH&#8373; ${i.qty * i.price}</span>
     </div>`).join('');
   } else { block.style.display = 'none'; }
@@ -500,8 +553,8 @@ async function submitOrder() {
       const { count } = await db.from('orders').select('*', { count: 'exact', head: true });
       orderId = `ORD-${String((count || 0) + 1).padStart(3, '0')}`;
       const orderItems = items.map(i => ({
-        menuItemId: i.id,
-        name: i.name + (i.stew ? ` (${i.stew})` : ''),
+        menuItemId: i.itemId,
+        name: i.name + (i.detail ? ` · ${i.detail}` : ''),
         quantity: i.qty,
         price: i.price
       }));
@@ -525,7 +578,7 @@ async function submitOrder() {
     let msg = `*New Order — Rose Cookhouse*\n\n*Customer:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}`;
     if (notes) msg += `\n*Notes:* ${notes}`;
     msg += `\n\n*Order:*\n`;
-    items.forEach(i => { msg += `• ${i.qty}x ${i.name}${i.stew ? ` (${i.stew})` : ''} — GH₵${i.qty * i.price}\n`; });
+    items.forEach(i => { msg += `• ${i.qty}x ${i.name}${i.detail ? ` · ${i.detail}` : ''} — GH₵${i.qty * i.price}\n`; });
     msg += `\n*Total: GH₵${total}*`;
     if (orderId) msg += `\n*Order ID:* ${orderId}`;
     msg += `\n\n_Sent from Rose Cookhouse website_`;
@@ -539,7 +592,7 @@ async function submitOrder() {
   }
   document.getElementById('successText').innerHTML = `Madam Rose will prepare your meal shortly. You will be updated via WhatsApp as your order progresses.<br><br>Thank you for ordering from Rose Cookhouse! 🌿`;
 
-  cart = {}; updateAll();
+  cart = {}; cartKey = 0; updateAll();
   btn.disabled = false;
   btn.textContent = 'Place Order';
 }
