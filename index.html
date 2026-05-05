@@ -70,6 +70,7 @@ section{padding:2.5rem 2rem;}
 .cart-item-info{flex:1;}
 .cart-item-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;}
 .cart-item-unit{font-size:11px;color:var(--muted);}
+.cart-item-stew{font-size:11px;color:var(--green);font-style:italic;}
 .cart-item-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .cart-item-price{font-size:14px;font-weight:700;color:var(--green);min-width:64px;text-align:right;}
 .cart-remove{background:none;border:none;color:#CC3333;font-size:18px;cursor:pointer;padding:0 2px;line-height:1;}
@@ -117,6 +118,17 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
 .footer-links a:hover{color:var(--cream);}
 .footer-copy{font-size:12px;color:rgba(247,243,236,.4);}
 .loading-menu{text-align:center;padding:3rem;color:var(--muted);font-size:14px;}
+
+/* Stew picker modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:var(--white);border-radius:16px;padding:2rem;max-width:360px;width:100%;text-align:center;}
+.modal-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--green);margin-bottom:6px;}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem;}
+.stew-options{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem;}
+.stew-btn{padding:14px;border-radius:10px;border:2px solid var(--green-border);background:var(--cream);cursor:pointer;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;color:var(--green);transition:all .15s;}
+.stew-btn:hover{border-color:var(--green);background:var(--green-light);}
+.modal-cancel{font-size:13px;color:var(--muted);cursor:pointer;text-decoration:underline;}
+
 @media(max-width:720px){
   .page-layout{grid-template-columns:1fr;}
   .cart-panel{position:static;}
@@ -127,6 +139,19 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
 </style>
 </head>
 <body>
+
+<!-- Stew Picker Modal -->
+<div class="modal-overlay" id="stewModal" style="display:none">
+  <div class="modal-box">
+    <div class="modal-title">Choose your stew</div>
+    <div class="modal-sub" id="stewModalSub">Which stew would you like with your Ampesi?</div>
+    <div class="stew-options">
+      <button class="stew-btn" onclick="confirmStew('Kontomire stew')">🌿 Kontomire stew</button>
+      <button class="stew-btn" onclick="confirmStew('Garden eggs stew')">🍆 Garden eggs stew</button>
+    </div>
+    <span class="modal-cancel" onclick="closeStewModal()">Cancel</span>
+  </div>
+</div>
 
 <nav>
   <div class="nav-logo">Rose Cookhouse</div>
@@ -198,7 +223,7 @@ footer{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center;}
       <div class="form-group"><label class="form-label">Full name</label><input class="form-input" id="fname" type="text" placeholder="Your name"></div>
       <div class="form-group"><label class="form-label">Phone number</label><input class="form-input" id="fphone" type="tel" placeholder="0XX XXX XXXX"></div>
       <div class="form-group full"><label class="form-label">Delivery address</label><input class="form-input" id="faddress" type="text" placeholder="Street, area, nearest landmark..."></div>
-      <div class="form-group full"><label class="form-label">Special instructions (optional)</label><input class="form-input" id="fnotes" type="text" placeholder="e.g. yam only, extra pepper, no onions..."></div>
+      <div class="form-group full"><label class="form-label">Special instructions (optional)</label><input class="form-input" id="fnotes" type="text" placeholder="e.g. extra pepper, no onions..."></div>
     </div>
     <div class="order-summary-label" style="margin-bottom:10px">How would you like to send your order?</div>
     <div class="order-methods">
@@ -284,16 +309,19 @@ let orderMethod = 'direct';
 let allMenuItems = [];
 let currentFilter = 'all';
 let cart = {};
+let pendingAmpesiItem = null;
 
 const bowlSVG=`<svg viewBox="0 0 44 44" fill="none"><ellipse cx="22" cy="22" rx="16" ry="9" stroke="#2D7A4A" stroke-width="1.5" fill="rgba(45,122,74,0.08)"/><path d="M8 22 Q22 34 36 22" stroke="#2D7A4A" stroke-width="1.5" fill="none"/><line x1="12" y1="26" x2="32" y2="26" stroke="#2D7A4A" stroke-width="1" opacity="0.4"/></svg>`;
 const chickenSVG=`<svg viewBox="0 0 44 44" fill="none"><path d="M10 30 Q12 18 22 15 Q32 12 36 22 Q38 30 30 34 Q20 38 10 30Z" stroke="#2D7A4A" stroke-width="1.5" fill="rgba(45,122,74,0.08)"/><circle cx="30" cy="18" r="4" stroke="#2D7A4A" stroke-width="1.2" fill="none"/></svg>`;
 
-function getIcon(cat) {
-  const protein = ['Extra Protein'];
-  return protein.includes(cat) ? chickenSVG : bowlSVG;
+function isAmpesi(item) {
+  return item.category === 'Ampesi';
 }
 
-// Load menu from Supabase
+function getIcon(cat) {
+  return cat === 'Extra Protein' ? chickenSVG : bowlSVG;
+}
+
 async function loadMenu() {
   try {
     const { data, error } = await db
@@ -330,30 +358,33 @@ function filterMenu(cat, btn) {
 
 function renderMenu(filter) {
   const grid = document.getElementById('menuGrid');
-  const items = filter === 'all'
-    ? allMenuItems
-    : allMenuItems.filter(m => m.category === filter);
-
+  const items = filter === 'all' ? allMenuItems : allMenuItems.filter(m => m.category === filter);
   if (items.length === 0) {
     grid.innerHTML = '<div class="loading-menu">No items in this category.</div>';
     return;
   }
-
   grid.innerHTML = items.map(item => {
     const qty = cart[item.id] ? cart[item.id].qty : 0;
     const isProtein = item.category === 'Extra Protein';
+    const ampesi = isAmpesi(item);
+    const stewNote = ampesi && cart[item.id] ? `<div class="cart-item-stew">${cart[item.id].stew}</div>` : '';
     return `<div class="menu-card" id="card-${item.id}" style="${!item.available ? 'opacity:0.55' : ''}">
       <div class="card-img-placeholder">${getIcon(item.category)}<span>Photo coming soon</span></div>
       <div class="card-body">
         ${!item.available ? '<span style="display:inline-block;background:#fee2e2;color:#dc2626;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-bottom:5px;">Unavailable today</span>' : ''}
+        ${ampesi ? '<span style="display:inline-block;background:#E8F5EC;color:#1B5E35;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-bottom:5px;">Choose your stew</span>' : ''}
         <div class="card-name">${item.name}</div>
-        <div class="card-footer" style="margin-top:10px">
+        ${ampesi ? '<div style="font-size:11px;color:#5A7A5E;margin-bottom:8px;">Served with kontomire stew or garden eggs stew</div>' : ''}
+        <div class="card-footer" style="margin-top:8px">
           <div class="card-price">GH&#8373; ${item.price}${isProtein ? '<small>add-on to any meal</small>' : ''}</div>
           ${!item.available
             ? `<span class="unavailable-tag">Unavailable</span>`
             : qty === 0
               ? `<button class="add-btn" onclick="addToCart(${item.id})">+ Add</button>`
-              : `<div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(${item.id},-1)">&#8722;</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${item.id},1)">+</button></div>`
+              : `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+                  <div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(${item.id},-1)">&#8722;</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty(${item.id},1)">+</button></div>
+                  ${ampesi && cart[item.id] ? `<span style="font-size:10px;color:var(--green);font-style:italic">${cart[item.id].stew}</span>` : ''}
+                </div>`
           }
         </div>
       </div>
@@ -364,9 +395,29 @@ function renderMenu(filter) {
 function addToCart(id) {
   const item = allMenuItems.find(m => m.id === id);
   if (!item || !item.available) return;
-  if (!cart[id]) cart[id] = { ...item, qty: 0 };
-  cart[id].qty = 1;
+  if (isAmpesi(item)) {
+    pendingAmpesiItem = item;
+    document.getElementById('stewModalSub').textContent = `Which stew would you like with your ${item.name}?`;
+    document.getElementById('stewModal').style.display = 'flex';
+  } else {
+    if (!cart[id]) cart[id] = { ...item, qty: 0 };
+    cart[id].qty = 1;
+    updateAll();
+  }
+}
+
+function confirmStew(stew) {
+  if (!pendingAmpesiItem) return;
+  const item = pendingAmpesiItem;
+  cart[item.id] = { ...item, qty: 1, stew };
+  pendingAmpesiItem = null;
+  closeStewModal();
   updateAll();
+}
+
+function closeStewModal() {
+  document.getElementById('stewModal').style.display = 'none';
+  pendingAmpesiItem = null;
 }
 
 function changeQty(id, delta) {
@@ -393,8 +444,15 @@ function updateCartPanel() {
   } else {
     emptyEl.style.display = 'none'; itemsEl.style.display = 'block'; footerEl.style.display = 'block';
     itemsEl.innerHTML = items.map(i => `<div class="cart-item">
-      <div class="cart-item-info"><div class="cart-item-name">${i.name}</div><div class="cart-item-unit">GH&#8373; ${i.price} each</div></div>
-      <div class="cart-item-right"><div class="cart-item-price">GH&#8373; ${i.qty * i.price}</div><button class="cart-remove" onclick="changeQty(${i.id},-${i.qty})" title="Remove">&#215;</button></div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${i.name}</div>
+        ${i.stew ? `<div class="cart-item-stew">🌿 ${i.stew}</div>` : ''}
+        <div class="cart-item-unit">GH&#8373; ${i.price} each</div>
+      </div>
+      <div class="cart-item-right">
+        <div class="cart-item-price">GH&#8373; ${i.qty * i.price}</div>
+        <button class="cart-remove" onclick="changeQty(${i.id},-${i.qty})" title="Remove">&#215;</button>
+      </div>
     </div>`).join('');
   }
 }
@@ -407,7 +465,10 @@ function updateOrderSummary() {
   const listEl = document.getElementById('orderItemsList');
   if (items.length > 0) {
     block.style.display = 'block';
-    listEl.innerHTML = items.map(i => `<div class="order-item-row"><span>${i.qty}x ${i.name}</span><span style="font-weight:700;color:var(--green)">GH&#8373; ${i.qty * i.price}</span></div>`).join('');
+    listEl.innerHTML = items.map(i => `<div class="order-item-row">
+      <span>${i.qty}x ${i.name}${i.stew ? ` (${i.stew})` : ''}</span>
+      <span style="font-weight:700;color:var(--green)">GH&#8373; ${i.qty * i.price}</span>
+    </div>`).join('');
   } else { block.style.display = 'none'; }
 }
 
@@ -438,7 +499,12 @@ async function submitOrder() {
     try {
       const { count } = await db.from('orders').select('*', { count: 'exact', head: true });
       orderId = `ORD-${String((count || 0) + 1).padStart(3, '0')}`;
-      const orderItems = items.map(i => ({ menuItemId: i.id, name: i.name, quantity: i.qty, price: i.price }));
+      const orderItems = items.map(i => ({
+        menuItemId: i.id,
+        name: i.name + (i.stew ? ` (${i.stew})` : ''),
+        quantity: i.qty,
+        price: i.price
+      }));
       await db.from('orders').insert({
         id: orderId,
         customer_name: name,
@@ -459,7 +525,7 @@ async function submitOrder() {
     let msg = `*New Order — Rose Cookhouse*\n\n*Customer:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}`;
     if (notes) msg += `\n*Notes:* ${notes}`;
     msg += `\n\n*Order:*\n`;
-    items.forEach(i => { msg += `• ${i.qty}x ${i.name} — GH₵${i.qty * i.price}\n`; });
+    items.forEach(i => { msg += `• ${i.qty}x ${i.name}${i.stew ? ` (${i.stew})` : ''} — GH₵${i.qty * i.price}\n`; });
     msg += `\n*Total: GH₵${total}*`;
     if (orderId) msg += `\n*Order ID:* ${orderId}`;
     msg += `\n\n_Sent from Rose Cookhouse website_`;
@@ -478,7 +544,6 @@ async function submitOrder() {
   btn.textContent = 'Place Order';
 }
 
-// Load menu on page load
 loadMenu();
 </script>
 </body>
